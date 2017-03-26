@@ -1,24 +1,42 @@
-# README
+# API
+## User
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**1. Register a new account**
 
-Things you may want to cover:
+**ENDPOINT**: *"/api/v1/users"*
 
-* Ruby version
+Params               | Type          | Description
+:-------------------:| :------------ | :-----------------------:
+fullname             | String        | Name of user
+email                | String        | Email of user
+password             | String        | Password of user
+address              | String        | Address of user
+phone_number         | String        | Phone number of user
 
-* System dependencies
+**Response**:
 
-* Configuration
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Success
+400                  | user.errors.messages
+500                  | Something error (system error)
 
-* Database creation
+**Structure of JSON**
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```json
+{
+  "success": true,
+  "message": "User has been created",
+  "user": {
+    "id": 1,
+    "fullname": "new member",
+    "email": "new_member@member.com",
+    "password_digest": "$2a$10$D9rYPXPLqDDvyzJ.bHFyZ.jHeTXCzjf7.Jwf.yEtazVFCj3.M/02i",
+    "address": "new address",
+    "phone_number": "0123456789",
+    "status": "Active",
+    "created_at": "2017-03-26T16:06:51.267Z",
+    "updated_at": "2017-03-26T16:06:51.267Z"
+  }
+}
+```
