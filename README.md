@@ -5,6 +5,8 @@
 
 **ENDPOINT**: *"/api/v1/users"*
 
+**Method**: POST
+
 Params               | Type          | Description
 :-------------------:| :------------ | :-----------------------:
 fullname             | String        | Name of user
@@ -25,18 +27,26 @@ Code                 | Description
 
 ```json
 {
-  "success": true,
-  "message": "User has been created",
+  "success":true,
+  "message":"User has been created",
   "user": {
     "id": 1,
-    "fullname": "new member",
-    "email": "new_member@member.com",
-    "password_digest": "$2a$10$D9rYPXPLqDDvyzJ.bHFyZ.jHeTXCzjf7.Jwf.yEtazVFCj3.M/02i",
-    "address": "new address",
-    "phone_number": "0123456789",
+    "email": "new_user@gmail.com",
+    "password_digest": "$2a$10$UZWymaY82ik8toaBakZLtODbB1lWEHR.c7pIca3X5H5uMDBd5PHYG",
     "status": "Active",
-    "created_at": "2017-03-26T16:06:51.267Z",
-    "updated_at": "2017-03-26T16:06:51.267Z"
+    "created_at": "2017-03-28T18:17:43.222Z",
+    "updated_at": "2017-03-28T18:17:43.229Z",
+    "customer_id": 1
+  },
+  "customer": {
+    "id": 1,
+    "fullname": "new_user",
+    "email": "new_user@gmail.com",
+    "address": "HN",
+    "phone_number": "1234567890",
+    "status": "Active",
+    "created_at": "2017-03-28T18:17:43.137Z",
+    "updated_at": "2017-03-28T18:17:43.137Z"
   }
 }
 ```

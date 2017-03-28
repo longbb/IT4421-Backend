@@ -1,8 +1,9 @@
 class User < ApplicationRecord
+  belongs_to :customer, optional: true
+
   before_save :generate_password_digest
   after_save :clear_password
   before_save { self.email = email.downcase }
-  before_save { self.fullname = fullname.downcase }
 
   attr_accessor :password
 
@@ -10,15 +11,9 @@ class User < ApplicationRecord
   validates :email, presence: true, length: { maximum: 255 },
     format: { with: VALID_EMAIL_REGEX },
     uniqueness: { case_sensitive: false }
-  VALID_NAME_REGEX = /\A\b[^-_][\w]*[^-_]\b\z/
-  validates :fullname, presence: true, length: { maximum: 50 }, format: { with: VALID_NAME_REGEX }
-  VALID_PHONE_NUMBER_REGEX = /\A[0-9]+\z/
-  validates :phone_number, presence: true,
-    format: { with: VALID_PHONE_NUMBER_REGEX }, length: { in: 10..11 }
   validates :password, confirmation: true
   validates_length_of :password, in: 8..20, on: :create
   validates_length_of :password, in: 8..20, allow_nil: true, on: :update
-  validates :address, presence: true
   validates :status, presence: true, inclusion: { in: Settings.user.status }
 
   def generate_password_digest
