@@ -123,3 +123,41 @@ Code                 | Description
   }
 }
 ```
+
+## Feedback
+
+**1. Create feedback**
+
+**ENDPOINT**: *"/api/v1/feedback"*
+
+**Method**: POST
+
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------:| :-----------------------:|:---------------:
+email                | String        | Email of user            | Yes
+feedback             | String        | Content of feedback      | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Create feedback successfully
+400                  | feedback.errors.messages
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Create feedback successfully",
+  "feedback": {
+    "id": 2,
+    "email": "linh@test.com",
+    "feedback": "sdfghjklkmn",
+    "status": "active",
+    "created_at": "2017-03-29T17:22:11.146Z",
+    "updated_at": "2017-03-29T17:22:11.146Z"
+  }
+}
+```

@@ -1,7 +1,7 @@
 require "rails_helper"
 require "spec_helper"
 
-RSpec.describe "Session API", :type => :request do
+RSpec.describe "Session API", type: :request do
   before do
     @user = create(:user)
   end
@@ -94,7 +94,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Authorization is invalid" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/login", email: @user.email, password: "password"
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
@@ -105,7 +105,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Authorization is blank" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/login", email: @user.email, password: "password"
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
@@ -116,7 +116,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Authorization is empty" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/login", email: @user.email, password: "password"
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
@@ -127,7 +127,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Authorization is nil" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/login", email: @user.email, password: "password"
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
@@ -138,7 +138,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Tokenkey is invalid" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": "token_key" }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
@@ -146,7 +146,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Tokenkey is nil" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": nil }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
@@ -154,7 +154,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Tokenkey is empty" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": "" }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
@@ -162,7 +162,7 @@ RSpec.describe "Session API", :type => :request do
       end
     end
     context "When Tokenkey is blank" do
-      it "should success" do
+      it "should fail" do
         post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": " " }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
