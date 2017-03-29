@@ -6,8 +6,6 @@ RSpec.describe Session, :type => :model do
   subject { session }
 
   describe "Test validation user_id" do
-    before do
-    end
     context "When user_id is invalid" do
       it {
         [0, "", " ", nil].each do |invalid|

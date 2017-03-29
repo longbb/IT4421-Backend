@@ -7,22 +7,25 @@ class API::V1::SessionAPI < Grape::API
     end
     post "", jbuilder: "sessions/login" do
       user = User.find_by(email: params[:email], status: "Active")
-        .try(:authenticate, params[:password])
       if user.present?
-        token = SecureRandom.hex(16)
-        token_key = Session.create_token_key(token, params[:email])
-        session = Session.new(user_id: user, token_key: token_key, status: "active")
-        if session.save!
-          @data = {
-            message: "Login successfully",
-            user: user,
-            token_key: token
-          }
+        if user.try(:authenticate, params[:password])
+          token = SecureRandom.hex(16)
+          token_key = Session.create_token_key(token, params[:email])
+          session = Session.new(user_id: user.id, token_key: token_key, status: "active")
+          if session.save!
+            @data = {
+              message: "Login successfully",
+              user: user,
+              token_key: token
+            }
+          else
+            error!({ success: false, message: "Something error" }, 500)
+          end
         else
-          error!({ success: false, message: "Something error" }, 500)
+          error!({ success: false, message: "Invalid email or password" }, 401)
         end
       else
-        error!({ success: false, message: "Invalid email or password" }, 400)
+        error!({ success: false, message: "Permission denied" }, 403)
       end
     end
   end
