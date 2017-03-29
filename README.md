@@ -1,4 +1,77 @@
 # API
+
+## Session
+
+**1. Login user**
+
+**ENDPOINT**: *"/api/v1/login"*
+
+**Method**: POST
+
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------:| :-----------------------:|:---------------:
+email                | String        | Email of user            | Yes
+password             | String        | Password of user         | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Login successfully
+401                  | Invalid email or password
+403                  | Permission denied
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Login successfully",
+  "user": {
+    "id":1,
+    "email":"user@test.com",
+    "password_digest":"$2a$10$rnrME50rFvm2apJiE/xeQeK6oj9UlaBYpg8QZAK.VncTbnetxVIta",
+    "status":"Active",
+    "created_at":"2017-03-29T07:54:41.963Z","
+    updated_at":"2017-03-29T07:54:41.963Z",
+    "customer_id":1
+  },
+  "token_key":"6e795d97adf171f5c4694f7ed5569d19"
+}
+```
+
+**2. Logout user**
+
+**ENDPOINT**: *"/api/v1/logout"*
+
+**Method**: POST
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of user
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Login successfully
+401                  | Invalid email or password
+403                  | Permission denied
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Logout successfully"
+}
+```
+
 ## User
 
 **1. Register a new account**
@@ -7,13 +80,13 @@
 
 **Method**: POST
 
-Params               | Type          | Description
-:-------------------:| :------------ | :-----------------------:
-fullname             | String        | Name of user
-email                | String        | Email of user
-password             | String        | Password of user
-address              | String        | Address of user
-phone_number         | String        | Phone number of user
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------ | :-----------------------:|:---------------:
+fullname             | String        | Name of user             | Yes
+email                | String        | Email of user            | Yes
+password             | String        | Password of user         | Yes
+address              | String        | Address of user          | Yes
+phone_number         | String        | Phone number of user     | Yes
 
 **Response**:
 

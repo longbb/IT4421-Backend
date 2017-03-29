@@ -3,4 +3,5 @@ class API::V1 < Grape::API
   format :json
 
   mount UserAPI
+  mount SessionAPI
 end
