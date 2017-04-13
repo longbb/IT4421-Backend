@@ -1,24 +1,24 @@
 require "rails_helper"
 require "spec_helper"
 
-RSpec.describe "Session API", type: :request do
+RSpec.describe "AdminSession API", type: :request do
   before do
-    @user = create(:user)
+    @admin = create(:admin)
   end
 
   describe "Login" do
-    context "When user login successfully" do
+    context "When admin login successfully" do
       it "should success" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json = JSON.parse(response.body)
         expect(response).to be_success
         expect(json["message"]).to eq("Login successfully")
-        expect(json["user"]["id"]).to eq(@user.id)
+        expect(json["admin"]["id"]).to eq(@admin.id)
       end
     end
     context "When email is invalid" do
       it "should fail" do
-        post "/api/v1/login", params: { email: "email", password: @user.password, format: :json }
+        post "/api/v1/admins/login", params: { email: "email", password: @admin.password, format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(403)
         expect(json["message"]).to eq("Permission denied")
@@ -26,7 +26,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When email is empty" do
       it "should fail" do
-        post "/api/v1/login", params: { email: "", password: @user.password, format: :json }
+        post "/api/v1/admins/login", params: { email: "", password: @admin.password, format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(403)
         expect(json["message"]).to eq("Permission denied")
@@ -34,7 +34,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When email is blank" do
       it "should fail" do
-        post "/api/v1/login", params: { email: " ", password: @user.password, format: :json }
+        post "/api/v1/admins/login", params: { email: " ", password: @admin.password, format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(403)
         expect(json["message"]).to eq("Permission denied")
@@ -42,7 +42,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When email is nil" do
       it "should fail" do
-        post "/api/v1/login", params: { email: nil, password: @user.password, format: :json }
+        post "/api/v1/admins/login", params: { email: nil, password: @admin.password, format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(403)
         expect(json["message"]).to eq("Permission denied")
@@ -50,7 +50,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When password is invalid" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "123456788", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "123456788", format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Invalid email or password")
@@ -58,7 +58,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When password is empty" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "", format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Invalid email or password")
@@ -66,7 +66,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When password is blank" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: " ", format: :json }
+        post "/api/v1/admins/login", params: {email: @admin.email, password: " ", format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Invalid email or password")
@@ -74,7 +74,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When password is nil" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: nil, format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: nil, format: :json }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Invalid email or password")
@@ -83,22 +83,22 @@ RSpec.describe "Session API", type: :request do
   end
 
   describe "Logout" do
-    context "When user logout successfully" do
+    context "When admin logout successfully" do
       it "should success" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
-        post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": token_key }
+        post "/api/v1/admins/logout", headers: { "Authorization": @admin.email, "Tokenkey": token_key }
         json = JSON.parse(response.body)
         expect(json["message"]).to eq("Logout successfully")
       end
     end
     context "When Authorization is invalid" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
-        post "/api/v1/logout", headers: { "Authorization": "invalid#@test.com", "Tokenkey": token_key }
+        post "/api/v1/admins/logout", headers: { "Authorization": "invalid#@test.com", "Tokenkey": token_key }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -106,10 +106,10 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Authorization is blank" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
-        post "/api/v1/logout", headers: { "Authorization": " ", "Tokenkey": token_key }
+        post "/api/v1/admins/logout", headers: { "Authorization": " ", "Tokenkey": token_key }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -117,10 +117,10 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Authorization is empty" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
-        post "/api/v1/logout", headers: { "Authorization": "", "Tokenkey": token_key }
+        post "/api/v1/admins/logout", headers: { "Authorization": "", "Tokenkey": token_key }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -128,10 +128,10 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Authorization is nil" do
       it "should fail" do
-        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
+        post "/api/v1/admins/login", params: { email: @admin.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
-        post "/api/v1/logout", headers: { "Authorization": nil, "Tokenkey": token_key }
+        post "/api/v1/admins/logout", headers: { "Authorization": nil, "Tokenkey": token_key }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -139,7 +139,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Tokenkey is invalid" do
       it "should fail" do
-        post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": "token_key" }
+        post "/api/v1/admins/logout", headers: { "Authorization": @admin.email, "Tokenkey": "token_key" }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -147,7 +147,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Tokenkey is nil" do
       it "should fail" do
-        post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": nil }
+        post "/api/v1/admins/logout", headers: { "Authorization": @admin.email, "Tokenkey": nil }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -155,7 +155,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Tokenkey is empty" do
       it "should fail" do
-        post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": "" }
+        post "/api/v1/admins/logout", headers: { "Authorization": @admin.email, "Tokenkey": "" }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")
@@ -163,7 +163,7 @@ RSpec.describe "Session API", type: :request do
     end
     context "When Tokenkey is blank" do
       it "should fail" do
-        post "/api/v1/logout", headers: { "Authorization": @user.email, "Tokenkey": " " }
+        post "/api/v1/admins/logout", headers: { "Authorization": @admin.email, "Tokenkey": " " }
         json = JSON.parse(response.body)
         expect(response).to have_http_status(401)
         expect(json["message"]).to eq("Authenticate fail")

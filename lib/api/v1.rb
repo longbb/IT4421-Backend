@@ -5,4 +5,5 @@ class API::V1 < Grape::API
   mount UserAPI
   mount SessionAPI
   mount FeedbackAPI
+  mount Admins::SessionAPI
 end

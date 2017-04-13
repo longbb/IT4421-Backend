@@ -1,8 +1,8 @@
 require "rails_helper"
 
-RSpec.describe Feedback, type: :model do
-  let(:feedback) { build(:feedback) }
-  subject { feedback }
+RSpec.describe Admin, type: :model do
+  let(:admin) { build(:admin) }
+  subject { admin }
 
   describe "Test validation email" do
     context "When email is invalid" do
@@ -14,11 +14,11 @@ RSpec.describe Feedback, type: :model do
       }
     end
   end
-  describe "Test validation content of feedback" do
-    context "When feedback is invalid" do
+  describe "Test validation password" do
+    context "When password is invalid" do
       it {
-        ["", " ", nil].each do |invalid|
-          subject.feedback = invalid
+        ["short", "", " ", nil].each do |invalid|
+          subject.password = invalid
           is_expected.not_to be_valid
         end
       }
