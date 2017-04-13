@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20170413170548) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "suppilers", force: :cascade do |t|
+  create_table "suppliers", force: :cascade do |t|
     t.string   "name"
     t.string   "address"
     t.string   "phone_number"
