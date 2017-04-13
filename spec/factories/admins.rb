@@ -1,7 +1,8 @@
 FactoryGirl.define do
   factory :admin do
-    email "MyString"
-    password_digest "MyString"
-    status "MyString"
+    email "admin@test.com"
+    password "admin123"
+    password_confirmation "admin123"
+    status "active"
   end
 end

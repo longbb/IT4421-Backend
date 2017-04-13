@@ -36,7 +36,10 @@ RSpec.describe Feedback, type: :model do
   end
   describe "All validations are valid" do
     it {
-      is_expected.to be_valid
+      ["active", "deleted"].each do |valid|
+        subject.status = valid
+        is_expected.to be_valid
+      end
     }
   end
 end
