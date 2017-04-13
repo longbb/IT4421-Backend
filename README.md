@@ -325,3 +325,77 @@ Code                 | Description
   }
 }
 ```
+# API ADMIN
+
+## AdminSession
+
+**1. Login admin**
+
+**ENDPOINT**: *"/api/v1/admins/login"*
+
+**Method**: POST
+
+**Parameters**
+
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------:| :-----------------------:|:---------------:
+email                | String        | Email of admin           | Yes
+password             | String        | Password of admin        | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Login successfully
+401                  | Invalid email or password
+403                  | Permission denied
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Login successfully",
+  "admin": {
+    "id":1,
+    "email":"admin@test.com",
+    "password_digest":"$2a$10$rnrME50rFvm2apJiE/xeQeK6oj9UlaBYpg8QZAK.VncTbnetxVIta",
+    "status":"active",
+    "created_at":"2017-03-29T07:54:41.963Z",
+    "updated_at":"2017-03-29T07:54:41.963Z",
+  },
+  "token_key":"6e795d97adf171f5c4694f7ed5569d19"
+}
+```
+
+**2. Logout admin**
+
+**ENDPOINT**: *"/api/v1/admins/logout"*
+
+**Method**: POST
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Login successfully
+401                  | Invalid email or password
+403                  | Permission denied
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Logout successfully"
+}
+```

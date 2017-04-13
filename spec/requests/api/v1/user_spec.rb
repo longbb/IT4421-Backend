@@ -8,8 +8,8 @@ RSpec.describe "User API", type: :request do
         context "Email does not present" do
           it "should return user error" do
             ["", nil, " "].each do |not_present|
-              post "/api/v1/users", email: not_present, password: "password",
-                address: "new address", phone_number: "0147963258", fullname: "new customer"
+              post "/api/v1/users", params: { email: not_present, password: "password",
+                address: "new address", phone_number: "0147963258", fullname: "new customer", format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Email can't be blank")
@@ -20,8 +20,8 @@ RSpec.describe "User API", type: :request do
 
         context "Email too long" do
           it "should return user error" do
-            post "/api/v1/users", email: "toolong" * 100 + "@test.com", password: "password",
-              address: "new address", phone_number: "0147963258", fullname: "new customer"
+            post "/api/v1/users", params: { email: "toolong" * 100 + "@test.com", password: "password",
+              address: "new address", phone_number: "0147963258", fullname: "new customer", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Email is too long (maximum is 255 characters)")
@@ -30,8 +30,8 @@ RSpec.describe "User API", type: :request do
 
         context "Email is invalid format" do
           it "should return user error" do
-            post "/api/v1/users", email: "invalid_format", password: "password",
-              address: "new address", phone_number: "0147963258", fullname: "new customer"
+            post "/api/v1/users", params: { email: "invalid_format", password: "password",
+              address: "new address", phone_number: "0147963258", fullname: "new customer", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Email is invalid")
@@ -43,8 +43,8 @@ RSpec.describe "User API", type: :request do
             @another_user = create :user
           end
           it "should return user error" do
-            post "/api/v1/users", email: @another_user.email + "@test.com", password: "password",
-              address: "new address", phone_number: "0147963258", fullname: "new customer"
+            post "/api/v1/users", params: { email: @another_user.email + "@test.com", password: "password",
+              address: "new address", phone_number: "0147963258", fullname: "new customer", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Email is invalid")
@@ -56,8 +56,8 @@ RSpec.describe "User API", type: :request do
         context "Name does not present" do
           it "should return user error" do
             ["", nil, " "].each do |not_present|
-              post "/api/v1/users", email: "new_user@test.com", password: "password",
-                address: "new address", phone_number: "0147963258", fullname: not_present
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+                address: "new address", phone_number: "0147963258", fullname: not_present, format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Fullname can't be blank")
@@ -68,8 +68,8 @@ RSpec.describe "User API", type: :request do
         context "Name too long" do
           it "should return user error" do
             ["", nil, " "].each do |not_present|
-              post "/api/v1/users", email: "new_user@test.com", password: "password",
-                address: "new address", phone_number: "0147963258", fullname: "toolong" * 100
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+                address: "new address", phone_number: "0147963258", fullname: "toolong" * 100, format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Fullname is too long (maximum is 50 characters)")
@@ -82,8 +82,8 @@ RSpec.describe "User API", type: :request do
         context "Address does not present" do
           it "should return user error" do
             ["", nil, " "].each do |not_present|
-              post "/api/v1/users", email: "new_user@test.com", password: "password",
-                address: not_present, phone_number: "0147963258", fullname: "new user"
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+                address: not_present, phone_number: "0147963258", fullname: "new user", format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Address can't be blank")
@@ -96,8 +96,8 @@ RSpec.describe "User API", type: :request do
         context "Phone number does not present" do
           it "should return user error" do
             ["", nil, " "].each do |not_present|
-              post "/api/v1/users", email: "new_user@test.com", password: "password",
-                address: "new address", phone_number: not_present, fullname: "new user"
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+                address: "new address", phone_number: not_present, fullname: "new user", format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Phone number can't be blank")
@@ -107,8 +107,8 @@ RSpec.describe "User API", type: :request do
 
         context "Phone number is invalid format" do
           it "should return user error" do
-            post "/api/v1/users", email: "new_user@test.com", password: "password",
-              address: "new address", phone_number: "notvaild", fullname: "new user"
+            post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+              address: "new address", phone_number: "notvaild", fullname: "new user", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Phone number is invalid")
@@ -117,8 +117,8 @@ RSpec.describe "User API", type: :request do
 
         context "Phone number is too short" do
           it "should return user error" do
-            post "/api/v1/users", email: "new_user@test.com", password: "password",
-              address: "new address", phone_number: "014785", fullname: "new user"
+            post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+              address: "new address", phone_number: "014785", fullname: "new user", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Phone number is too short (minimum is 10 characters)")
@@ -127,8 +127,8 @@ RSpec.describe "User API", type: :request do
 
         context "Phone number is too long" do
           it "should return user error" do
-            post "/api/v1/users", email: "new_user@test.com", password: "password",
-              address: "new address", phone_number: "01478512356789", fullname: "new user"
+            post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+              address: "new address", phone_number: "01478512356789", fullname: "new user", format: :json }
             json = JSON.parse(response.body)
             expect(response).to have_http_status(400)
             expect(json["message"]).to include("Phone number is too long (maximum is 11 characters)")
@@ -139,8 +139,8 @@ RSpec.describe "User API", type: :request do
           context "Password does not present" do
             it "should return user error" do
               ["", nil, " "].each do |not_present|
-                post "/api/v1/users", email: "new_user@test.com", password: not_present,
-                  address: "new address", phone_number: "0147963258", fullname: "new user"
+                post "/api/v1/users", params: { email: "new_user@test.com", password: not_present,
+                  address: "new address", phone_number: "0147963258", fullname: "new user", format: :json }
                 json = JSON.parse(response.body)
                 expect(response).to have_http_status(400)
                 expect(json["message"]).to include("Password is too short (minimum is 8 characters)")
@@ -150,8 +150,8 @@ RSpec.describe "User API", type: :request do
 
           context "Password is too short" do
             it "should return user error" do
-              post "/api/v1/users", email: "new_user@test.com", password: "short",
-                address: "new address", phone_number: "0147963258", fullname: "new user"
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "short",
+                address: "new address", phone_number: "0147963258", fullname: "new user", format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Password is too short (minimum is 8 characters)")
@@ -160,8 +160,8 @@ RSpec.describe "User API", type: :request do
 
           context "Phone number is too long" do
             it "should return user error" do
-              post "/api/v1/users", email: "new_user@test.com", password: "toolong" * 20,
-                address: "new address", phone_number: "0147963258", fullname: "new user"
+              post "/api/v1/users", params: { email: "new_user@test.com", password: "toolong" * 20,
+                address: "new address", phone_number: "0147963258", fullname: "new user", format: :json }
               json = JSON.parse(response.body)
               expect(response).to have_http_status(400)
               expect(json["message"]).to include("Password is too long (maximum is 20 characters)")
@@ -173,8 +173,8 @@ RSpec.describe "User API", type: :request do
 
     describe "Create user with valid information" do
       it "should create user" do
-        post "/api/v1/users", email: "new_user@test.com", password: "password",
-          address: "new address", phone_number: "0147963258", fullname: "new customer"
+        post "/api/v1/users", params: { email: "new_user@test.com", password: "password",
+          address: "new address", phone_number: "0147963258", fullname: "new customer", format: :json }
         json = JSON.parse(response.body)
         expect(response).to be_success
         expect(json["message"]).to eq "User has been created"
@@ -205,7 +205,7 @@ RSpec.describe "User API", type: :request do
         @user = create :user, email: @customer.email, customer_id: @customer.id
       end
       it "should return current user information" do
-        post "/api/v1/login", email: @user.email, password: "password"
+        post "/api/v1/login", params: { email: @user.email, password: "password", format: :json }
         json_login = JSON.parse(response.body)
         token_key = json_login["token_key"]
         get "/api/v1/users/current_user", headers: { "Authorization": @user.email, "Tokenkey": token_key }

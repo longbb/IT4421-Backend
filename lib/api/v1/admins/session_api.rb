@@ -33,7 +33,6 @@ class API::V1::Admins::SessionAPI < Grape::API
     post "/logout", jbuilder: "admins/sessions/logout" do
       email = request.headers["Authorization"]
       token_key = request.headers["Tokenkey"]
-      byebug
       if AdminSession.authorized?(token_key, email)
         if AdminSession.logout(token_key, email)
           @data = { success: true, message: "Logout successfully" }
