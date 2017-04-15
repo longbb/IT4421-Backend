@@ -399,3 +399,240 @@ Code                 | Description
   "message":"Logout successfully"
 }
 ```
+## SupplierAPI
+
+**1. Index suppliers**
+
+**ENDPOINT**: *"/api/v1/admins/suppliers"*
+
+**Method**: GET
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+200                  | Success
+401                  | Authenticate fail
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Index suppliers successfully",
+  "suppliers":
+  [
+    {
+      "id":1,
+      "name":"LongBB",
+      "address":"HN",
+      "phone_number":"1234567890",
+      "description":"Chuyen buon ban cho meo",
+      "status":"active",
+      "created_at":"2017-04-15T03:01:34.932Z",
+      "updated_at":"2017-04-15T03:01:34.932Z"
+    },
+    {
+      "id":2,
+      "name":"LinhNN",
+      "address":"HN",
+      "phone_number":"1234567890",
+      "description":"Chuyen rau cu qua hang ngay",
+      "status":"active",
+      "created_at":"2017-04-15T03:19:46.886Z",
+      "updated_at":"2017-04-15T03:19:46.886Z"
+    }
+  ]
+}
+
+```
+
+**2. Show supplier information**
+
+**ENDPOINT**: *"/api/v1/admins/suppliers/:id"*
+
+**Method**: GET
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Success
+401                  | Authenticate fail
+404                  | Suppier not found/ Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Show supplier successfully",
+  "supplier":
+  {
+    "id":1,
+    "name":"LongBB",
+    "address":"HN",
+    "phone_number":"1234567890",
+    "description":"Chuyen buon ban cho meo",
+    "status":"active",
+    "created_at":"2017-04-15T03:01:34.932Z",
+    "updated_at":"2017-04-15T03:01:34.932Z"
+  }
+}
+
+```
+
+**3. Create new supplier**
+
+**ENDPOINT**: *"/api/v1/admins/suppliers"*
+
+**Method**: POST
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Parameters**
+
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------ | :-----------------------:|:---------------:
+name                 | String        | Name of supplier         | Yes
+description          | String        | Email of supplier        | Yes
+address              | String        | Address of supplier      | Yes
+phone_number         | String        | Phone number of supplier | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Success
+400                  | supplier.errors.messages
+401                  | Authenticate fail
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Create supplier successfully",
+  "supplier":
+  {
+    "id":4,
+    "name":"NganPTK",
+    "address":"Thai Binh",
+    "phone_number":"1234567890",
+    "description":"Chuyen san xuat tien gia",
+    "status":"active",
+    "created_at":"2017-04-15T03:38:11.832Z",
+    "updated_at":"2017-04-15T03:38:11.832Z"
+  }
+}
+```
+
+**4. Update supplier information**
+
+**ENDPOINT**: *"/api/v1/admins/suppliers/:id"*
+
+**Method**: PATCH
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Parameters**
+
+Params               | Type          | Description              | Requires?
+:-------------------:| :------------ | :-----------------------:|:---------------:
+name                 | String        | Name of supplier         | No
+description          | String        | Email of supplier        | No
+address              | String        | Address of supplier      | No
+phone_number         | String        | Phone number of supplier | No
+
+***Note:** At least one parameter must be selected*
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Success
+400                  | supplier.errors.messages
+401                  | Authenticate fail
+404                  | Admin not found/ Supplier does not exist
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Update supplier info successfully",
+  "supplier":
+  {
+    "status":"active",
+    "id":3,
+    "description":"Chuyen san xuat tien gia sang buon ban giay dep",
+    "name":"NganPTK",
+    "address":"Thai Binh",
+    "phone_number":"1234567890",
+    "created_at":"2017-04-15T03:32:51.433Z",
+    "updated_at":"2017-04-15T03:45:34.857Z"
+  }
+}
+```
+
+**4. Delete supplier information**
+
+**ENDPOINT**: *"/api/v1/admins/suppliers/:id"*
+
+**Method**: DELETE
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Success
+400                  | supplier.errors.messages
+401                  | Authenticate fail
+404                  | Admin not found/ Supplier not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Delete supplier successfully"
+}
+```
