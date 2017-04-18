@@ -2,3 +2,5 @@ user:
   status: ["Active", "Blocked"]
 product:
   status: ["active", "deleted"]
+variant:
+  status: ["active", "deleted"]
