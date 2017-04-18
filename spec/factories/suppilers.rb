@@ -1,9 +1,9 @@
 FactoryGirl.define do
-  factory :suppiler do
+  factory :supplier do
     name "MyString"
     address "MyString"
-    phone_number "MyString"
+    phone_number "0123456789"
     description "MyString"
-    status "MyString"
+    status "active"
   end
 end
