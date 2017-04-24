@@ -69,7 +69,7 @@ class API::V1::Admins::SupplierAPI < Grape::API
               if supplier.save
                 @data = {
                   message: "Create supplier successfully",
-                  supplier: supplier,
+                  supplier: supplier
                 }
               else
                 error!({ success: false, message: "Something error" }, 500)

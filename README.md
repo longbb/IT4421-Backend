@@ -636,3 +636,308 @@ Code                 | Description
   "message":"Delete supplier successfully"
 }
 ```
+
+## Product
+
+### 1. Create product
+
+**ENDPOINT**: *"/api/v1/admin/products"*
+
+**Method**: POST
+
+**Parameters**
+
+Params                               | Type           | Description                                                   | Requires?
+:-----------------------------------:| :-------------:| :------------------------------------------------------------:|:---------------:
+title                                | String         | Title of product                                              | Yes
+description                          | String         | Description of product                                        | Yes
+images                               | String         | Image urls of product, include image urls separated by commas | Yes
+supplier_id                          | Integer        | Id of supplier                                                | Yes
+options                              | String         | Option of product, include name of options separated by commas| No
+variants_attributes                  | Array of Hashes| Array variants of product                                     | Yes
+variants_attributes.properties       | Array of Hashes| Array properties of variant                                   | No
+variants_attributes.properties.name  | String         | Name of property                                              | Yes
+variants_attributes.properties.value | String         | Value of property                                             | Yes
+variants_attributes.image_url        | String         | Url image thumbnail of variant                                | Yes
+variants_attributes.inventory        | Integer        | Inventory of variant                                          | Yes
+variants_attributes.original_price   | Integer        | Original price of variant                                     | Yes
+variants_attributes.selling_price    | Integer        | Selling price of variant                                      | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :-----------------------------------------:
+201                  | Create product successfully
+400                  | Properties variant not match with options
+400                  | product.errors.full_messages
+401                  | Authenticate fail
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Create product successfully",
+  "product":
+  {
+    "id": 10,
+    "title": "new_product",
+    "description": "new product",
+    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "supplier_id": 1,
+    "options": "color",
+    "status": "active",
+    "created_at": "2017-04-23T15:56:49.785Z",
+    "updated_at": "2017-04-23T15:56:49.785Z"
+  },
+  "variants":
+  [
+    {
+      "properties":
+      [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product_id": "10",
+      "original_price": 10000,
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }
+  ]
+}
+```
+
+### 2. Index product
+
+**ENDPOINT**: *"/api/v1/admin/products"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number product per page            | No
+key_word             | String         | Key word want to search            | No
+
+***Note:** page_no, per_page provide all or none of parameters*
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index product successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+401                  | Authenticate fail
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Index products successfully",
+  "total_products": 10,
+  "products":
+  [
+    {
+      "id": 1,
+      "title": "new_product",
+      "description": "new product",
+      "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "supplier_id": 1,
+      "options": "color",
+      "status": "active",
+      "created_at": "2017-04-23T15:43:01.950Z",
+      "updated_at": "2017-04-23T15:43:01.950Z"
+    },
+    {
+      "id": 2,
+      "title": "new_product",
+      "description": "new product",
+      "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "supplier_id": 1,
+      "options": "color",
+      "status": "active",
+      "created_at": "2017-04-23T15:47:53.840Z",
+      "updated_at": "2017-04-23T15:47:53.840Z"
+    }
+  ]
+}
+```
+
+### 3. Show product
+
+**ENDPOINT**: *"/api/v1/admin/products/:id"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+id                   | Integer        | Id of product want to show         | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show product successfully
+401                  | Authenticate fail
+404                  | Product not found
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Show product successfully",
+  "product":
+  {
+    "id": 10,
+    "title": "new_product",
+    "description": "new product",
+    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "supplier_id": 1,
+    "options": "color",
+    "status": "active",
+    "created_at": "2017-04-23T15:56:49.785Z",
+    "updated_at": "2017-04-23T15:56:49.785Z"
+  },
+  "variants":
+  [
+    {
+      "properties":
+      [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product_id": "10",
+      "original_price": 10000,
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }
+  ]
+}
+```
+
+### 4. Update product
+
+**ENDPOINT**: *"/api/v1/admin/products/:id"*
+
+**Method**: PATCH
+
+**Parameters**
+
+Params                               | Type           | Description                                                   | Requires?
+:-----------------------------------:| :-------------:| :------------------------------------------------------------:|:---------------:
+id                                   | Integer        | Id of product want to update                                  | Yes
+title                                | String         | Title of product                                              | No
+description                          | String         | Description of product                                        | No
+images                               | String         | Image urls of product, include image urls separated by commas | No
+supplier_id                          | Integer        | Id of supplier                                                | No
+variants_attributes                  | Array of Hashes| Array variants of product                                     | No
+variants_attributes.id               | Integer        | Id of variant want to update                                  | Yes
+variants_attributes.image_url        | String         | Url image thumbnail of variant                                | No
+variants_attributes.inventory        | Integer        | Inventory of variant                                          | No
+variants_attributes.original_price   | Integer        | Original price of variant                                     | No
+variants_attributes.selling_price    | Integer        | Selling price of variant                                      | No
+
+***Note:** At least one parameter must be selected*
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :-----------------------------------------:
+201                  | Update product successfully
+400                  | product.errors.full_messages
+401                  | Authenticate fail
+404                  | Admin not found
+404                  | Product not found
+404                  | Variant not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Update product successfully",
+  "product":
+  {
+    "id": 10,
+    "description": "update description",
+    "supplier_id": 1,
+    "title": "update_product",
+    "status": "active",
+    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "options": "color",
+    "created_at": "2017-04-23T15:56:49.785Z",
+    "updated_at": "2017-04-24T18:47:20.107Z"
+  },
+  "variants":
+  [
+    {
+      "properties":
+      [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product_id": "10",
+      "original_price": 10000,
+      "selling_price": 30000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 30000,
+      "status": "active"
+    }
+  ]
+}
+```
+
+### 5. Destroy product
+
+**ENDPOINT**: *"/api/v1/admin/products/:id"*
+
+**Method**: DELETE
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+id                   | Integer        | Id of product want to destroy      | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+201                  | Destroy product successfully
+401                  | Authenticate fail
+404                  | Product not found
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Destroy product successfully"
+}
+```
