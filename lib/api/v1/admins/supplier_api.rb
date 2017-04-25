@@ -2,16 +2,28 @@ class API::V1::Admins::SupplierAPI < Grape::API
   resource :admins do
     resource :suppliers do
       desc "Index suppliers"
+      params do
+        optional :page_no, type: Integer , desc: "Page no"
+        optional :per_page, type: Integer, desc: "Number product per page"
+        optional :key_word, type: String, desc: "Key word want to search"
+        all_or_none_of :page_no, :per_page
+      end
       get "", jbuilder: "admins/suppliers/index" do
         email = request.headers["Authorization"]
         token_key = request.headers["Tokenkey"]
         if AdminSession.authorized?(token_key, email)
           admin = Admin.find_by(email: email, status: "active")
           if admin.present?
-            suppliers = Supplier.active
+            if params[:page_no].present? && params[:per_page].present?
+              if params[:page_no] <= 0 || params[:per_page] <= 0
+                error!({ success: false, message: "Per page and page no must be greater than 0" }, 400)
+              end
+            end
+            suppliers = Supplier.search(params[:page_no], params[:per_page], params[:key_word])
             @data = {
               message: "Index suppliers successfully",
               suppliers: suppliers,
+              total_suppliers: Supplier.search(nil, nil, params[:key_word]).count
             }
           else
             error!({ success: false, message: "Admin not found" }, 404)
@@ -29,7 +41,7 @@ class API::V1::Admins::SupplierAPI < Grape::API
           admin = Admin.find_by(email: email, status: "active")
           if admin.present?
             supplier = Supplier.find(params[:id])
-            if supplier.present? && supplier.is_active?
+            if supplier.present?
               @data = {
                 message: "Show supplier successfully",
                 supplier: supplier,
@@ -128,8 +140,13 @@ class API::V1::Admins::SupplierAPI < Grape::API
           admin = Admin.find_by(email: email, status: "active")
           if admin.present?
             supplier = Supplier.find(params[:id])
-            if supplier.present? && supplier.is_active?
-              if supplier.update(status: "deleted")
+            if supplier.present?
+              if supplier.is_active?
+                status = "deleted"
+              else
+                status = "active"
+              end
+              if supplier.update(status: status)
                 @data = {
                   message: "Delete supplier successfully"
                 }
