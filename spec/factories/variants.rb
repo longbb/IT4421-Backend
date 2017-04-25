@@ -1,11 +1,11 @@
 FactoryGirl.define do
   factory :variant do
-    product_id "MyString"
+    product_id 1
     original_price 1
     selling_price 1
     properties "MyString"
-    image_id 1
+    image_url "MyString"
     inventory 1
-    status "MyString"
+    status "active"
   end
 end

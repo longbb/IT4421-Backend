@@ -8,4 +8,5 @@ class API::V1 < Grape::API
   mount Admins::SessionAPI
   mount Admins::SupplierAPI
   mount Admins::ProductAPI
+  mount Admins::VariantAPI
 end

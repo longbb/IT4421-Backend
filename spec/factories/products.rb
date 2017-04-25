@@ -4,7 +4,7 @@ FactoryGirl.define do
     description "MyString"
     images "MyString"
     supplier_id ""
-    options "MyString"
-    status "MyString"
+    options "color"
+    status "active"
   end
 end

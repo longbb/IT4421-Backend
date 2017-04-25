@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 20170413170548) do
   end
 
   create_table "variants", force: :cascade do |t|
-    t.string   "product_id"
+    t.integer  "product_id"
     t.integer  "original_price"
     t.integer  "selling_price"
     t.string   "properties"
