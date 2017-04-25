@@ -941,3 +941,92 @@ Code                 | Description
   "message": "Destroy product successfully"
 }
 ```
+## VariantAPI
+
+### 1. Create Variant of a product
+
+**ENDPOINT**: *"/api/v1/admin/products/:product_id/variants"*
+
+**Method**: POST
+
+**Parameters**
+
+Params           | Type           | Description                    | Requires?
+:---------------:| :-------------:| :-----------------------------:|:-----------:
+product_id       | Integer        | Create variant in this product | Yes
+properties       | Array of Hashes| Array properties of variant    | No
+properties.name  | String         | Name of property               | Yes
+properties.value | String         | Value of property              | Yes
+image_url        | String         | Url image thumbnail of variant | Yes
+inventory        | Integer        | Inventory of variant           | Yes
+original_price   | Integer        | Original price of variant      | Yes
+selling_price    | Integer        | Selling price of variant       | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :-----------------------------------------:
+201                  | Create variant successfully
+400                  | Properties variant not match with options
+400                  | variant.errors.full_messages
+401                  | Authenticate fail
+404                  | Admin not found/ Product not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success":true,
+  "message":"Create variant successfully",
+  "variant":{
+    "id":8,
+    "product_id": 1,
+    "original_price":1000,
+    "selling_price":5000,
+    "properties":[
+      {
+        "name": "color",
+        "value": "blue"
+      }
+    ],
+    "image_url":"http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "inventory":1000,
+    "status":"active",
+    "created_at":"2017-04-25T19:16:59.037Z",
+    "updated_at":"2017-04-25T19:16:59.037Z"
+  }
+}
+```
+
+### 2. Destroy a variant of a product
+
+
+**ENDPOINT**: *"/api/v1/admin/products/:product_id/variants/:id"*
+
+**Method**: DELETE
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:----------:
+product_id           | Integer        | Product has variant want to destroy| Yes
+id                   | Integer        | Id of variant want to destroy      | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+201                  | Destroy variant successfully
+401                  | Authenticate fail
+404                  | Admin not found/ Product not found/ Variant not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Destroy variant successfully"
+}
+```
