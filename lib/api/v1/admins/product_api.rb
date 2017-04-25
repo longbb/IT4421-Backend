@@ -103,7 +103,7 @@ class API::V1::Admins::ProductAPI < Grape::API
             @data = {
               message: "Index products successfully",
               products: products,
-              total_products: Product.search(params[:key_word]).count
+              total_products: Product.search(nil, nil, params[:key_word]).count
             }
           else
             error!({ success: false, message: "Admin not found" }, 404)
