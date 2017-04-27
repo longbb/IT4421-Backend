@@ -77,12 +77,19 @@ class API::V1::Admins::VariantAPI < Grape::API
               if admin.present?
                 product = Product.find_by(id: params[:product_id], status: "active")
                 if product.present?
-                  variant = Variant.find_by(id: params[:id], status: "active")
+                  variant = Variant.find_by(id: params[:id])
                   if variant.present? && variant.product_id == product.id
-                    if variant.update(status: "deleted")
-                      @data = {
-                        message: "Destroy variant successfully"
-                      }
+                    status = variant.status == "active" ? "deleted" : "active"
+                    if variant.update(status: status)
+                      if status == "deleted"
+                        @data = {
+                          message: "Destroy variant successfully"
+                        }
+                      else
+                        @data = {
+                          message: "Active variant successfully"
+                        }
+                      end
                     else
                       error!({ success: false, message: "Something error" }, 500)
                     end

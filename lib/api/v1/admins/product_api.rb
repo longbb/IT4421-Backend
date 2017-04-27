@@ -99,10 +99,16 @@ class API::V1::Admins::ProductAPI < Grape::API
                 error!({ success: false, message: "Per page and page no must be greater than 0" }, 400)
               end
             end
+            arr_products = Array.new
             products = Product.search(params[:page_no], params[:per_page], params[:key_word])
+            products.each do |product|
+              supplier = Supplier.find_by(id: product.supplier_id)
+              arr_products.push({ product: product, supplier: supplier })
+            end
+
             @data = {
               message: "Index products successfully",
-              products: products,
+              products: arr_products,
               total_products: Product.search(nil, nil, params[:key_word]).count
             }
           else
@@ -121,11 +127,13 @@ class API::V1::Admins::ProductAPI < Grape::API
           admin = Admin.find_by(email: email, status: "active")
           if admin.present?
             product = Product.find_by(id: params[:id])
-            if product.present?
+            supplier = Supplier.find_by(id: params[:id])
+            if product.present? && supplier.present?
               @data = {
                 message: "Show product successfully",
                 product: product,
-                variants: product.variants
+                variants: product.variants,
+                supplier: supplier
               }
             else
               error!({ success: false, message: "Product not found" }, 404)
