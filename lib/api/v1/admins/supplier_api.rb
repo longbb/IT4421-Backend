@@ -19,7 +19,7 @@ class API::V1::Admins::SupplierAPI < Grape::API
                 error!({ success: false, message: "Per page and page no must be greater than 0" }, 400)
               end
             end
-            suppliers = Supplier.search(params[:page_no], params[:per_page], params[:key_word])
+            suppliers = Supplier.order(id: :desc).search(params[:page_no], params[:per_page], params[:key_word])
             @data = {
               message: "Index suppliers successfully",
               suppliers: suppliers,

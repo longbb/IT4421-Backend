@@ -100,7 +100,7 @@ class API::V1::Admins::ProductAPI < Grape::API
               end
             end
             arr_products = Array.new
-            products = Product.search(params[:page_no], params[:per_page], params[:key_word])
+            products = Product.order(id: :desc).search(params[:page_no], params[:per_page], params[:key_word])
             products.each do |product|
               supplier = Supplier.find_by(id: product.supplier_id)
               arr_products.push({ product: product, supplier: supplier })
