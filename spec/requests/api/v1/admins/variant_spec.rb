@@ -1,7 +1,7 @@
 require "rails_helper"
 require "spec_helper"
 
-RSpec.describe "Supplier API", type: :request do
+RSpec.describe "Variant API", type: :request do
   before do
     @admin = create(:admin)
     @supplier = create(:supplier)
@@ -170,6 +170,18 @@ RSpec.describe "Supplier API", type: :request do
       end
     end
 
+    context "When active successfully" do
+      before { @variant.update(status: "deleted") }
+      it "should success" do
+        delete "/api/v1/admins/products/#{@product.id}/variants/#{@variant.id}",
+          headers: { "Authorization": @admin.email, "Tokenkey": @token_key }
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("Active variant successfully")
+        @variant.reload
+        expect(@variant.status).to eq("active")
+      end
+    end
+
     context "When product not found" do
       it "should fail" do
         delete "/api/v1/admins/products/0/variants/#{@variant.id}",
@@ -201,16 +213,6 @@ RSpec.describe "Supplier API", type: :request do
       end
     end
 
-    context "When product's status id deleted" do
-      before { @variant.update(status: "deleted") }
-      it "should fail" do
-        delete "/api/v1/admins/products/#{@product.id}/variants/#{@variant.id}",
-          headers: { "Authorization": @admin.email, "Tokenkey": @token_key }
-        json = JSON.parse(response.body)
-        expect(response).to have_http_status(404)
-        expect(json["message"]).to eq("Variant not found")
-      end
-    end
     context "When Authorization is invalid" do
       it "should fail" do
         delete "/api/v1/admins/products/#{@product.id}/variants/#{@variant.id}",

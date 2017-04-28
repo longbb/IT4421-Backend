@@ -750,29 +750,58 @@ Code                 | Description
   "products":
   [
     {
-      "id": 1,
-      "title": "new_product",
-      "description": "new product",
-      "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-      "supplier_id": 1,
-      "options": "color",
-      "status": "active",
-      "created_at": "2017-04-23T15:43:01.950Z",
-      "updated_at": "2017-04-23T15:43:01.950Z"
+      "product":
+      {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-04-23T15:43:01.950Z",
+        "updated_at": "2017-04-23T15:43:01.950Z"
+      },
+      "supplier":
+      {
+        "id": 1,
+        "name": "Hello wwelcome",
+        "address": "HN",
+        "phone_number": "23456789110",
+        "description": "T-shirt",
+        "status": "active",
+        "created_at": "2017-04-25T19:34:28.256Z",
+        "updated_at": "2017-04-25T19:34:28.256Z"
+      }
     },
     {
-      "id": 2,
-      "title": "new_product",
-      "description": "new product",
-      "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-      "supplier_id": 1,
-      "options": "color",
-      "status": "active",
-      "created_at": "2017-04-23T15:47:53.840Z",
-      "updated_at": "2017-04-23T15:47:53.840Z"
-    }
+      "product":
+      {
+        "id": 2,
+        "title": "Old product",
+        "description": "old product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-04-23T15:43:01.950Z",
+        "updated_at": "2017-04-23T15:43:01.950Z"
+      },
+      "supplier":
+      {
+        "id": 1,
+        "name": "Hello wwelcome",
+        "address": "HN",
+        "phone_number": "23456789110",
+        "description": "T-shirt",
+        "status": "active",
+        "created_at": "2017-04-25T19:34:28.256Z",
+        "updated_at": "2017-04-25T19:34:28.256Z"
+      }
+    },
   ]
 }
+
 ```
 
 ### 3. Show product
@@ -814,6 +843,17 @@ Code                 | Description
     "status": "active",
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-23T15:56:49.785Z"
+  },
+  "supplier":
+  {
+    "id": 1,
+    "name": "Hello wwelcome",
+    "address": "HN",
+    "phone_number": "23456789110",
+    "description": "T-shirt",
+    "status": "active",
+    "created_at": "2017-04-25T19:34:28.256Z",
+    "updated_at": "2017-04-25T19:34:28.256Z"
   },
   "variants":
   [
