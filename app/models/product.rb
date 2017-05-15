@@ -7,6 +7,7 @@ class Product < ApplicationRecord
   validates :title, presence: true
   validates :description, presence: :true
   validates :status, presence: true, inclusion: Settings.product.status
+  scope :active, -> { where(status: "active") }
 
   def is_active?
     self.status == "active"

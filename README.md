@@ -641,7 +641,7 @@ Code                 | Description
 
 ### 1. Create product
 
-**ENDPOINT**: *"/api/v1/admin/products"*
+**ENDPOINT**: *"/api/v1/admins/products"*
 
 **Method**: POST
 
@@ -715,7 +715,7 @@ Code                 | Description
 
 ### 2. Index product
 
-**ENDPOINT**: *"/api/v1/admin/products"*
+**ENDPOINT**: *"/api/v1/admins/products"*
 
 **Method**: GET
 
@@ -806,7 +806,7 @@ Code                 | Description
 
 ### 3. Show product
 
-**ENDPOINT**: *"/api/v1/admin/products/:id"*
+**ENDPOINT**: *"/api/v1/admins/products/:id"*
 
 **Method**: GET
 
@@ -878,7 +878,7 @@ Code                 | Description
 
 ### 4. Update product
 
-**ENDPOINT**: *"/api/v1/admin/products/:id"*
+**ENDPOINT**: *"/api/v1/admins/products/:id"*
 
 **Method**: PATCH
 
@@ -953,7 +953,7 @@ Code                 | Description
 
 ### 5. Destroy product
 
-**ENDPOINT**: *"/api/v1/admin/products/:id"*
+**ENDPOINT**: *"/api/v1/admins/products/:id"*
 
 **Method**: DELETE
 
@@ -985,7 +985,7 @@ Code                 | Description
 
 ### 1. Create Variant of a product
 
-**ENDPOINT**: *"/api/v1/admin/products/:product_id/variants"*
+**ENDPOINT**: *"/api/v1/admins/products/:product_id/variants"*
 
 **Method**: POST
 
@@ -1042,7 +1042,7 @@ Code                 | Description
 ### 2. Destroy a variant of a product
 
 
-**ENDPOINT**: *"/api/v1/admin/products/:product_id/variants/:id"*
+**ENDPOINT**: *"/api/v1/admins/products/:product_id/variants/:id"*
 
 **Method**: DELETE
 
@@ -1068,5 +1068,133 @@ Code                 | Description
 {
   "success": true,
   "message": "Destroy variant successfully"
+}
+```
+
+## ProductAPI for Customer
+
+### 1. Index product
+
+**ENDPOINT**: *"/api/v1/products"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number product per page            | No
+key_word             | String         | Key word want to search            | No
+
+***Note:** page_no, per_page provide all or none of parameters*
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index product successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Index products successfully",
+  "total_products": 10,
+  "products":
+  [
+    {
+      "product":
+      {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-04-23T15:43:01.950Z",
+        "updated_at": "2017-04-23T15:43:01.950Z"
+      }
+    },
+    {
+      "product":
+      {
+        "id": 2,
+        "title": "Old product",
+        "description": "old product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-04-23T15:43:01.950Z",
+        "updated_at": "2017-04-23T15:43:01.950Z"
+      }
+    },
+  ]
+}
+
+```
+
+### 2. Show product
+
+**ENDPOINT**: *"/api/v1/products/:id"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+id                   | Integer        | Id of product want to show         | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show product successfully
+404                  | Product not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Show product successfully",
+  "product":
+  {
+    "id": 10,
+    "title": "new_product",
+    "description": "new product",
+    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "supplier_id": 1,
+    "options": "color",
+    "status": "active",
+    "created_at": "2017-04-23T15:56:49.785Z",
+    "updated_at": "2017-04-23T15:56:49.785Z"
+  },
+  "variants":
+  [
+    {
+      "properties":
+      [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product_id": "10",
+      "original_price": 10000,
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }
+  ]
 }
 ```
