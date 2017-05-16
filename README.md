@@ -1198,3 +1198,175 @@ Code                 | Description
   ]
 }
 ```
+## OrderAPI for customer
+
+### 1. Create order
+
+** NOTE **: *Customer can login or not, unless login, customer must fill customer info*
+**ENDPOINT**: *"/api/v1/orders"*
+
+**Method**: POST
+
+--- Case 1: User not login but create order ---
+
+**Parameters**
+
+Params                   | Type          | Description              | Requires?
+:-----------------------:| :------------ | :-----------------------:|:---------------:
+customer                 | Hash          | Hash of customer info    | No
+customer.fullname        | String        | Name of user             | Yes
+customer.email           | String        | Email of user            | Yes
+customer.address         | String        | Address of user          | Yes
+customer.phone_number    | String        | Phone number of user     | Yes
+total_price              | Integer       | Total price of order     | Yes
+variants                 | Array of Hash | Array variants info      | Yes
+variants.variant_id      | Integer       | ID of variant            | Yes
+variants.quantity        | Integer       | Quantity of variant      | Yes
+variants.unit_price      | Integer       | Unit price of a variant  | Yes
+
+--- Case 2: User login and create order ---
+
+**Parameters**
+
+Params                   | Type          | Description              | Requires?
+:-----------------------:| :------------ | :-----------------------:|:---------------:
+total_price              | Integer       | Total price of order     | Yes
+variants                 | Array of Hash | Array variants info      | Yes
+variants.variant_id      | Integer       | ID of variant            | Yes
+variants.quantity        | Integer       | Quantity of variant      | Yes
+variants.unit_price      | Integer       | Unit price of a variant  | Yes
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of user
+Tokenkey             | String        | Token key
+
+--------------------------------------------------------------------------------------
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Create order successfully
+400                  | customer.errors.messages
+400                  | order.errors.messages
+404                  | Authenticate fail
+404                  | Variant not found
+404                  | User not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Create order successfully",
+  "order": {
+    "id": 10,
+    "customer_id": 8,
+    "total_price": 100000000,
+    "status": "active",
+    "created_at": "2017-05-16T07:59:43.509Z",
+    "updated_at": "2017-05-16T07:59:43.509Z"},
+    "order_variants": [{
+      "order_variant": {
+        "quantity": 1,
+        "status": "active"
+      },
+      "variant": {
+        "properties": [{
+          "name": "color",
+          "value": "blue"
+        }],
+        "id": 2,
+        "product_id": 1,
+        "selling_price": 5000,
+        "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "inventory": 1000,
+        "status": "active"
+      }
+    }]
+  }
+}
+```
+
+### 2. Index orders
+
+**ENDPOINT**: *"/api/v1/orders"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number order per page              | No
+daterange            | String         | Daterange to search                | No
+
+***Note:** page_no, per_page provide all or none of parameters; format of daterange: "%m/%d/%y-%m/%d/%y", eg: "05/01/2017-05/18/2017"*
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of user
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index orders successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+401                  | Authenticate fail
+404                  | User not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+
+```json
+{
+  "success": true,
+  "message": "Index orders successfully",
+  "total_orders": 19,
+  "orders":[
+    {
+      "id": 21,
+      "customer_id": 19,
+      "total_price": 100000000,
+      "status": "active",
+      "created_at": "2017-05-16T09:36:10.487Z",
+      "updated_at": "2017-05-16T09:36:10.487Z"
+    },
+    {
+      "id": 18,
+      "customer_id": 16,
+      "total_price": 100000000,
+      "status": "active",
+      "created_at": "2017-05-16T09:23:05.708Z",
+      "updated_at": "2017-05-16T09:23:05.708Z"
+    },
+    {
+      "id": 17,
+      "customer_id": 15,
+      "total_price": 100000000,
+      "status": "active",
+      "created_at": "2017-05-16T09:22:20.810Z",
+      "updated_at": "2017-05-16T09:22:20.810Z"
+    },
+    {
+      "id": 16,
+      "customer_id": 14,
+      "total_price": 100000000,
+      "status": "active",
+      "created_at": "2017-05-16T09:21:56.950Z",
+      "updated_at": "2017-05-16T09:21:56.950Z"
+    }
+  ]
+}
+```
