@@ -1333,40 +1333,27 @@ Code                 | Description
 {
   "success": true,
   "message": "Index orders successfully",
-  "total_orders": 19,
-  "orders":[
-    {
-      "id": 21,
-      "customer_id": 19,
-      "total_price": 100000000,
-      "status": "active",
-      "created_at": "2017-05-16T09:36:10.487Z",
-      "updated_at": "2017-05-16T09:36:10.487Z"
-    },
-    {
-      "id": 18,
-      "customer_id": 16,
-      "total_price": 100000000,
-      "status": "active",
-      "created_at": "2017-05-16T09:23:05.708Z",
-      "updated_at": "2017-05-16T09:23:05.708Z"
-    },
-    {
-      "id": 17,
-      "customer_id": 15,
-      "total_price": 100000000,
-      "status": "active",
-      "created_at": "2017-05-16T09:22:20.810Z",
-      "updated_at": "2017-05-16T09:22:20.810Z"
-    },
-    {
-      "id": 16,
-      "customer_id": 14,
-      "total_price": 100000000,
-      "status": "active",
-      "created_at": "2017-05-16T09:21:56.950Z",
-      "updated_at": "2017-05-16T09:21:56.950Z"
-    }
-  ]
+  "total_orders": 1,
+  "orders":
+  [{
+    "id": 1,
+    "total_price": 20000,
+    "status": "active",
+    "variants":
+    [{
+      "quantity": 3,
+      "variant_id": 1,
+      "properties":
+      [{
+        "name":"color",
+        "value":"red"
+      }],
+      "product_id": 1,
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }]
+  }]
 }
 ```

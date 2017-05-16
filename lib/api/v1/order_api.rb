@@ -18,11 +18,24 @@ class API::V1::OrderAPI < Grape::API
               error!({ success: false, message: "Per page and page no must be greater than 0" }, 400)
             end
           end
-          orders = Order.active.order(id: :desc).search(params[:page_no], params[:per_page], params[:daterange])
+          arr_orders = Array.new
+          orders = Order.search(user.customer, params[:page_no], params[:per_page], params[:daterange]).order(id: :desc)
+          orders.each do |order|
+            order_variants = order.order_variants
+            arr_variants = Array.new
+            order_variants.each do |order_variant|
+              variant = order_variant.variant
+              arr_variants.push({
+                quantity: order_variant.quantity,
+                variant: variant
+              })
+            end
+            arr_orders.push({ order: order, variants: arr_variants })
+          end
           @data = {
             message: "Index orders successfully",
-            orders: orders,
-            total_orders: Order.active.search(nil, nil, params[:daterange]).count
+            orders: arr_orders,
+            total_orders: Order.search(user.customer, nil, nil, params[:daterange]).count
           }
         else
           error!({ success: false, message: "User not found" }, 404)
