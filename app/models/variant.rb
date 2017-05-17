@@ -6,4 +6,5 @@ class Variant < ApplicationRecord
   validates :image_url, presence: true
   validates :inventory, presence: true, numericality: { greater_than: 0 }
   validates :status, presence: true, inclusion: Settings.variant.status
+  scope :active, -> { where(status: "active") }
 end
