@@ -1,6 +1,8 @@
 user:
-  status: ["Active", "Blocked"]
+  status: ["Active", "Blocked", "error"]
 product:
   status: ["active", "deleted"]
 variant:
   status: ["active", "deleted"]
+order:
+  status: ["active", "canceled", "done", "error"]
