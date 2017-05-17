@@ -4,6 +4,6 @@ FactoryGirl.define do
     variant_id 1
     quantity 1
     unit_price 1
-    status "MyString"
+    status "active"
   end
 end
