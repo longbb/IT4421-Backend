@@ -101,14 +101,10 @@ class API::V1::Admins::ProductAPI < Grape::API
             end
             arr_products = Array.new
             products = Product.order(id: :desc).search(params[:page_no], params[:per_page], params[:key_word])
-            products.each do |product|
-              supplier = Supplier.find_by(id: product.supplier_id)
-              arr_products.push({ product: product, supplier: supplier })
-            end
 
             @data = {
               message: "Index products successfully",
-              products: arr_products,
+              products: products,
               total_products: Product.search(nil, nil, params[:key_word]).count
             }
           else
@@ -127,7 +123,7 @@ class API::V1::Admins::ProductAPI < Grape::API
           admin = Admin.find_by(email: email, status: "active")
           if admin.present?
             product = Product.find_by(id: params[:id])
-            supplier = Supplier.find_by(id: params[:id])
+            supplier = Supplier.find_by(id: product.try(:id))
             if product.present? && supplier.present?
               @data = {
                 message: "Show product successfully",

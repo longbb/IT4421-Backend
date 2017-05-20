@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20170516031732) do
     t.string   "description"
     t.string   "images"
     t.integer  "supplier_id"
+    t.string   "slug"
     t.string   "options"
     t.string   "status"
     t.datetime "created_at",  null: false

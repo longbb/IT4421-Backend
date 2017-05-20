@@ -20,21 +20,9 @@ class API::V1::OrderAPI < Grape::API
           end
           arr_orders = Array.new
           orders = Order.search(user.customer, params[:page_no], params[:per_page], params[:daterange]).order(id: :desc)
-          orders.each do |order|
-            order_variants = order.order_variants
-            arr_variants = Array.new
-            order_variants.each do |order_variant|
-              variant = order_variant.variant
-              arr_variants.push({
-                quantity: order_variant.quantity,
-                variant: variant
-              })
-            end
-            arr_orders.push({ order: order, variants: arr_variants })
-          end
           @data = {
             message: "Index orders successfully",
-            orders: arr_orders,
+            orders: orders,
             total_orders: Order.search(user.customer, nil, nil, params[:daterange]).count
           }
         else
@@ -71,60 +59,7 @@ class API::V1::OrderAPI < Grape::API
           status: "Active"
         )
         if customer.valid?
-          if customer.save!
-            order = Order.new(
-              customer_id: customer.id,
-              total_price: params[:total_price],
-              status: "active"
-            )
-            if order.valid?
-              if order.save!
-                arr_order_variants = Array.new
-                params[:variants].each do |item|
-                  variant = Variant.find_by(id: item.variant_id, status: "active")
-                  if variant.present?
-                    order_variant = OrderVariant.new(
-                      order_id: order.id,
-                      variant_id: variant.id,
-                      quantity: item.quantity,
-                      unit_price: item.unit_price,
-                      status: "active"
-                    )
-                    if order_variant.valid?
-                      arr_order_variants.push({ order_variant: order_variant, variant: variant })
-                    else
-                      customer.update(status: "error")
-                      order.update(status: "error")
-                      arr_order_variants.each do |order_var|
-                        order_var[:order_variant].update(status: "error")
-                      end
-                      error!({ success: false, message: order_variant.errors.full_messages }, 400)
-                    end
-                  else
-                    customer.update(status: "error")
-                    order.update(status: "error")
-                    arr_order_variants.each do |order_var|
-                      order_var[:order_variant].update(status: "error")
-                    end
-                    error!({ success: false, message: "Variant not found" }, 404)
-                  end
-                end
-                @data = {
-                  message: "Create order successfully",
-                  order: order,
-                  order_variants: arr_order_variants
-                }
-              else
-                customer.update(status: "error")
-                error!({ success: false, message: "Something error" }, 500)
-              end
-            else
-              customer.update(status: "error")
-              error!({ success: false, message: order.errors.full_messages }, 400)
-            end
-          else
-            error!({ success: false, message: "Something error" }, 500)
-          end
+          customer.save
         else
           error!({ success: false, message: customer.errors.full_messages }, 400)
         end
@@ -133,59 +68,49 @@ class API::V1::OrderAPI < Grape::API
         token_key = request.headers["Tokenkey"]
         if Session.authorized?(token_key, email)
           user = User.find_by(email: email, status: "Active")
-          if user.present? && user.customer.present?
-            order = Order.new(
-              customer_id: user.customer.id,
-              total_price: params[:total_price],
-              status: "active"
-            )
-            if order.valid?
-              if order.save!
-                arr_order_variants = Array.new
-                params[:variants].each do |item|
-                  variant = Variant.find_by(id: item.variant_id, status: "active")
-                  if variant.present?
-                    order_variant = OrderVariant.new(
-                      order_id: order.id,
-                      variant_id: variant.id,
-                      quantity: item.quantity,
-                      unit_price: item.unit_price,
-                      status: "active"
-                    )
-                    if order_variant.valid?
-                      arr_order_variants.push({ order_variant: order_variant, variant: variant })
-                    else
-                      order.update(status: "error")
-                      arr_order_variants.each do |order_var|
-                        order_var[:order_variant].update(status: "error")
-                      end
-                      error!({ success: false, message: order_variant.errors.full_messages }, 400)
-                    end
-                  else
-                    order.update(status: "error")
-                    arr_order_variants.each do |order_var|
-                      order_var[:order_variant].update(status: "error")
-                    end
-                    error!({ success: false, message: "Variant not found" }, 404)
-                  end
-                end
-                @data = {
-                  message: "Create order successfully",
-                  order: order,
-                  order_variants: arr_order_variants
-                }
-              else
-                error!({ success: false, message: "Something error" }, 500)
-              end
-            else
-              error!({ success: false, message: order.errors.full_messages }, 400)
-            end
+          if user.present?
+            customer = user.customer
           else
             error!({ success: false, message: "User not found" }, 404)
           end
         else
           error!({ success: false, message: "Authenticate fail" }, 401)
         end
+      end
+
+      check_valid_order = Order.check_valid_order params[:variants]
+      if check_valid_order[:valid]
+        order = Order.new(
+          customer_id: customer.id,
+          total_price: params[:total_price],
+          status: "active"
+        )
+        if order.valid?
+          if order.save
+            params[:variants].each do |variant_info|
+              variant = Variant.find_by(id: variant_info[:variant_id], status: "active")
+              order_variant = OrderVariant.create(
+                order_id: order.id,
+                variant_id: variant.id,
+                quantity: variant_info[:quantity],
+                unit_price: variant_info[:unit_price],
+                status: "active"
+              )
+              old_inventory = variant.inventory - variant_info[:quantity]
+              variant.update(inventory: old_inventory)
+            end
+            @data = {
+              message: "Create order successfully",
+              order: order
+            }
+          else
+            error!({ success: false, message: "Something error" }, 500)
+          end
+        else
+          error!({ success: false, message: order.errors.full_messages }, 400)
+        end
+      else
+        error!({ success: false, message: check_valid_order[:message] }, check_valid_order[:error_code])
       end
     end
   end
