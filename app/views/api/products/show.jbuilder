@@ -1,7 +1,9 @@
 json.success true
 json.message @data[:message] if @data[:message]
 json.product @data[:product] if @data[:product]
+json.total_inventory @data[:product].total_inventory
 json.variants(@data[:variants]) do |variant|
+  json.id variant.id
   if variant.properties.present?
     json.properties(eval(variant.properties)) do |property|
       json.name property["name"]

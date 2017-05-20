@@ -5,6 +5,7 @@ class CreateProducts < ActiveRecord::Migration[5.0]
       t.string :description
       t.string :images
       t.integer :supplier_id
+      t.string :slug
       t.string :options
       t.string :status
 

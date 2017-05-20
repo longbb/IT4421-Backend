@@ -692,8 +692,10 @@ Code                 | Description
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-23T15:56:49.785Z"
   },
+  "total_inventory": 100,
   "variants":
   [
+    "id": 10,
     {
       "properties":
       [
@@ -759,8 +761,9 @@ Code                 | Description
         "supplier_id": 1,
         "options": "color",
         "status": "active",
-        "created_at": "2017-04-23T15:43:01.950Z",
-        "updated_at": "2017-04-23T15:43:01.950Z"
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
       },
       "supplier":
       {
@@ -784,8 +787,9 @@ Code                 | Description
         "supplier_id": 1,
         "options": "color",
         "status": "active",
-        "created_at": "2017-04-23T15:43:01.950Z",
-        "updated_at": "2017-04-23T15:43:01.950Z"
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
       },
       "supplier":
       {
@@ -844,6 +848,7 @@ Code                 | Description
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-23T15:56:49.785Z"
   },
+  "total_inventory": 100,
   "supplier":
   {
     "id": 1,
@@ -858,6 +863,7 @@ Code                 | Description
   "variants":
   [
     {
+      "id": 10,
       "properties":
       [
         {
@@ -930,8 +936,10 @@ Code                 | Description
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-24T18:47:20.107Z"
   },
+  "total_inventory": 100.
   "variants":
   [
+    "id": 10,
     {
       "properties":
       [
@@ -1117,8 +1125,9 @@ Code                 | Description
         "supplier_id": 1,
         "options": "color",
         "status": "active",
-        "created_at": "2017-04-23T15:43:01.950Z",
-        "updated_at": "2017-04-23T15:43:01.950Z"
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
       }
     },
     {
@@ -1131,8 +1140,9 @@ Code                 | Description
         "supplier_id": 1,
         "options": "color",
         "status": "active",
-        "created_at": "2017-04-23T15:43:01.950Z",
-        "updated_at": "2017-04-23T15:43:01.950Z"
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
       }
     },
   ]
@@ -1178,8 +1188,10 @@ Code                 | Description
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-23T15:56:49.785Z"
   },
+  "total_inventory": 100,
   "variants":
   [
+    "id": 10,
     {
       "properties":
       [
@@ -1252,7 +1264,8 @@ Code                 | Description
 201                  | Create order successfully
 400                  | customer.errors.messages
 400                  | order.errors.messages
-404                  | Authenticate fail
+401                  | Authenticate fail
+401                  | Not enough quantity
 404                  | Variant not found
 404                  | User not found
 500                  | Something error (system error)
@@ -1281,7 +1294,18 @@ Code                 | Description
           "value": "blue"
         }],
         "id": 2,
-        "product_id": 1,
+        "product": {
+          "id": 1,
+          "title": "new_product",
+          "description": "new product",
+          "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+          "supplier_id": 1,
+          "slug": "new_product",
+          "options": "color",
+          "status": "active",
+          "created_at": "2017-05-20T18:02:29.751Z",
+          "updated_at": "2017-05-20T18:02:29.751Z"
+        },
         "selling_price": 5000,
         "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
         "inventory": 1000,
@@ -1348,7 +1372,18 @@ Code                 | Description
         "name":"color",
         "value":"red"
       }],
-      "product_id": 1,
+      "product": {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "slug": "new_product",
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-05-20T18:02:29.751Z",
+        "updated_at": "2017-05-20T18:02:29.751Z"
+      },
       "selling_price": 20000,
       "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
       "inventory": 100,

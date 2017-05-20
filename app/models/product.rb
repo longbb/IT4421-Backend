@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  before_save :create_slug
+
   belongs_to :supplier
   has_many :variants
 
@@ -13,6 +15,22 @@ class Product < ApplicationRecord
     self.status == "active"
   end
 
+  def create_slug
+    self.slug = self.title.parameterize
+  end
+
+  def min_price
+    self.variants.minimum(:selling_price)
+  end
+
+  def max_price
+    self.variants.maximum(:selling_price)
+  end
+
+  def total_inventory
+    self.variants.sum(:inventory)
+  end
+
   class << self
     def search page_no=nil, per_page=nil, key_word=nil
       result = Product.all
@@ -20,7 +38,8 @@ class Product < ApplicationRecord
         result = result.limit(per_page).offset((page_no - 1) * per_page)
       end
       if key_word.present?
-        result = result.where("title LIKE ?", "%#{ key_word }%")
+        key_word_slug = key_word.parameterize
+        result = result.where("slug LIKE ?", "%#{ key_word_slug }%")
       end
       result
     end

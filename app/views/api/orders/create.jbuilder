@@ -1,23 +1,23 @@
 json.success true
 json.message @data[:message] if @data[:message]
 json.order @data[:order] if @data[:order]
-json.order_variants(@data[:order_variants]) do |item|
+json.order_variants(@data[:order].order_variants) do |order_variant|
   json.order_variant do
-    json.quantity item[:order_variant].quantity
-    json.status item[:order_variant].status
+    json.quantity order_variant.quantity
+    json.status order_variant.status
   end
   json.variant do
-    if item[:variant].properties.present?
-      json.properties(eval(item[:variant].properties)) do |property|
+    if order_variant.variant.try(:properties).present?
+      json.properties(eval(order_variant.variant.properties)) do |property|
         json.name property["name"]
         json.value property["value"]
       end
     end
-    json.id item[:variant].id
-    json.product_id item[:variant].product_id
-    json.selling_price item[:variant].selling_price
-    json.image_url item[:variant].image_url
-    json.inventory item[:variant].inventory
-    json.status item[:variant].status
+    json.id order_variant.variant.id
+    json.product order_variant.variant.product
+    json.selling_price order_variant.variant.selling_price
+    json.image_url order_variant.variant.image_url
+    json.inventory order_variant.variant.inventory
+    json.status order_variant.variant.status
   end
 end

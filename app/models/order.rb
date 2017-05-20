@@ -22,5 +22,31 @@ class Order < ApplicationRecord
       end
       result
     end
+
+    def check_valid_order variants
+      result = {
+        'valid': true
+      }
+      variants.each do |variant_info|
+        variant = Variant.find_by(id: variant_info[:variant_id], status: "active")
+        if variant.present?
+          unless variant.inventory >= variant_info[:quantity]
+            result = {
+              'valid': false,
+              'message': 'Not enough quantity',
+              'error_code': 401
+            }
+          end
+        else
+          result = {
+            'valid': false,
+            'message': 'Variant not found',
+            'error_code': 404
+          }
+          break
+        end
+      end
+      return result
+    end
   end
 end
