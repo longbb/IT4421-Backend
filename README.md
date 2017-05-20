@@ -695,8 +695,8 @@ Code                 | Description
   "total_inventory": 100,
   "variants":
   [
-    "id": 10,
     {
+      "id": 10,
       "properties":
       [
         {
@@ -936,11 +936,11 @@ Code                 | Description
     "created_at": "2017-04-23T15:56:49.785Z",
     "updated_at": "2017-04-24T18:47:20.107Z"
   },
-  "total_inventory": 100.
+  "total_inventory": 100,
   "variants":
   [
-    "id": 10,
     {
+      "id": 10,
       "properties":
       [
         {
@@ -1191,8 +1191,8 @@ Code                 | Description
   "total_inventory": 100,
   "variants":
   [
-    "id": 10,
     {
+      "id": 10,
       "properties":
       [
         {
