@@ -6,6 +6,7 @@ json.products(@data[:products]) do |product|
     json.id product.id
     json.title product.title
     json.description product.description
+    json.category product.category
     json.images product.images
     json.options product.options
     json.status product.status

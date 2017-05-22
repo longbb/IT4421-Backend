@@ -8,6 +8,7 @@ class Product < ApplicationRecord
 
   validates :title, presence: true
   validates :description, presence: :true
+  validates :category, presence: true
   validates :status, presence: true, inclusion: Settings.product.status
   scope :active, -> { where(status: "active") }
 
@@ -32,14 +33,27 @@ class Product < ApplicationRecord
   end
 
   class << self
-    def search page_no=nil, per_page=nil, key_word=nil
+    def search page_no=nil, per_page=nil, key_word=nil, category=nil, sort_name=nil
       result = Product.all
       if per_page.present? && page_no.present?
         result = result.limit(per_page).offset((page_no - 1) * per_page)
       end
+
       if key_word.present?
         key_word_slug = key_word.parameterize
         result = result.where("slug LIKE ?", "%#{ key_word_slug }%")
+      end
+
+      if category.present?
+        result = result.where(category: category)
+      end
+
+      if sort_name.present?
+        if sort_name == "asc"
+          result = result.order(title: :asc)
+        else
+          result = result.order(title: :desc)
+        end
       end
       result
     end

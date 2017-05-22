@@ -651,6 +651,7 @@ Params                               | Type           | Description             
 :-----------------------------------:| :-------------:| :------------------------------------------------------------:|:---------------:
 title                                | String         | Title of product                                              | Yes
 description                          | String         | Description of product                                        | Yes
+category                             | String         | Category of product                                           | Yes
 images                               | String         | Image urls of product, include image urls separated by commas | Yes
 supplier_id                          | Integer        | Id of supplier                                                | Yes
 options                              | String         | Option of product, include name of options separated by commas| No
@@ -685,6 +686,7 @@ Code                 | Description
     "id": 10,
     "title": "new_product",
     "description": "new product",
+    "category": "new_category",
     "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
     "supplier_id": 1,
     "options": "color",
@@ -728,8 +730,12 @@ Params               | Type           | Description                        | Req
 page_no              | Integer        | Page no                            | No
 per_page             | Integer        | Number product per page            | No
 key_word             | String         | Key word want to search            | No
+category             | String         | Category want to search            | No
+sort_name            | String         | Sort type want to search           | No
 
-***Note:** page_no, per_page provide all or none of parameters*
+***Note:**
+- page_no, per_page provide all or none of parameters
+- sort_name must be "asc" or "desc"*
 
 **Response**:
 
@@ -757,6 +763,7 @@ Code                 | Description
         "id": 1,
         "title": "new_product",
         "description": "new product",
+        "category": "new_category",
         "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
         "supplier_id": 1,
         "options": "color",
@@ -783,6 +790,7 @@ Code                 | Description
         "id": 2,
         "title": "Old product",
         "description": "old product",
+        "category": "new_category",
         "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
         "supplier_id": 1,
         "options": "color",
@@ -841,6 +849,7 @@ Code                 | Description
     "id": 10,
     "title": "new_product",
     "description": "new product",
+    "category": "new_category",
     "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
     "supplier_id": 1,
     "options": "color",
@@ -895,6 +904,7 @@ Params                               | Type           | Description             
 id                                   | Integer        | Id of product want to update                                  | Yes
 title                                | String         | Title of product                                              | No
 description                          | String         | Description of product                                        | No
+category                             | String         | Category of product                                           | No
 images                               | String         | Image urls of product, include image urls separated by commas | No
 supplier_id                          | Integer        | Id of supplier                                                | No
 variants_attributes                  | Array of Hashes| Array variants of product                                     | No
@@ -928,6 +938,7 @@ Code                 | Description
   {
     "id": 10,
     "description": "update description",
+    "category": "new_category",
     "supplier_id": 1,
     "title": "update_product",
     "status": "active",
@@ -1094,8 +1105,12 @@ Params               | Type           | Description                        | Req
 page_no              | Integer        | Page no                            | No
 per_page             | Integer        | Number product per page            | No
 key_word             | String         | Key word want to search            | No
+category             | String         | Category want to search            | No
+sort_name            | String         | Sort type want to search           | No
 
-***Note:** page_no, per_page provide all or none of parameters*
+***Note:**
+- page_no, per_page provide all or none of parameters
+- sort_name must be "asc" or "desc"*
 
 **Response**:
 
@@ -1121,6 +1136,7 @@ Code                 | Description
         "id": 1,
         "title": "new_product",
         "description": "new product",
+        "category": "new_category",
         "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
         "supplier_id": 1,
         "options": "color",
@@ -1136,6 +1152,7 @@ Code                 | Description
         "id": 2,
         "title": "Old product",
         "description": "old product",
+        "category": "new_category",
         "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
         "supplier_id": 1,
         "options": "color",
@@ -1181,6 +1198,7 @@ Code                 | Description
     "id": 10,
     "title": "new_product",
     "description": "new product",
+    "category": "new_category",
     "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
     "supplier_id": 1,
     "options": "color",
@@ -1214,7 +1232,8 @@ Code                 | Description
 
 ### 1. Create order
 
-** NOTE **: *Customer can login or not, unless login, customer must fill customer info*
+**NOTE**: *Customer can login or not, unless login, customer must fill customer info*
+
 **ENDPOINT**: *"/api/v1/orders"*
 
 **Method**: POST

@@ -6,6 +6,8 @@ class API::V1::ProductAPI < Grape::API
       optional :per_page, type: Integer, desc: "Number product per page"
       optional :key_word, type: String, desc: "Key word want to search"
       all_or_none_of :page_no, :per_page
+      optional :category, type: String, desc: "Category of products"
+      optional :sort_name, type: String, desc: "Sort type products by name", values: ["asc", "desc"]
     end
     get "", jbuilder: "products/index" do
       if params[:page_no].present? && params[:per_page].present?
@@ -13,11 +15,12 @@ class API::V1::ProductAPI < Grape::API
           error!({ success: false, message: "Per page and page no must be greater than 0" }, 400)
         end
       end
-      products = Product.active.order(id: :desc).search(params[:page_no], params[:per_page], params[:key_word])
+      products = Product.active.search(params[:page_no], params[:per_page],
+        params[:key_word], params[:category], params[:sort_name])
       @data = {
         message: "Index products successfully",
         products: products,
-        total_products: Product.search(nil, nil, params[:key_word]).count
+        total_products: Product.search(nil, nil, params[:key_word], params[:category], params[:sort_name]).count
       }
     end
 
