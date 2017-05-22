@@ -5,6 +5,7 @@ class API::V1::Admins::ProductAPI < Grape::API
       params do
         requires :title, type: String, desc: "Title of product"
         optional :description, type: String, desc: "Description of product"
+        requires :category, type: String, desc: "Category of product"
         requires :images, type: String, desc: "Image urls of product, include image urls separated by commas"
         requires :supplier_id, type: Integer, desc: "Id of supplier"
         optional :options, type: String, desc: "Option of product, include name of options separated by commas"
@@ -87,6 +88,8 @@ class API::V1::Admins::ProductAPI < Grape::API
         optional :per_page, type: Integer, desc: "Number product per page"
         optional :key_word, type: String, desc: "Key word want to search"
         all_or_none_of :page_no, :per_page
+        optional :category, type: String, desc: "Category of products"
+        optional :sort_name, type: String, desc: "Sort type products by name", values: ["asc", "desc"]
       end
       get "", jbuilder: "admins/products/index" do
         email = request.headers["Authorization"]
@@ -100,12 +103,13 @@ class API::V1::Admins::ProductAPI < Grape::API
               end
             end
             arr_products = Array.new
-            products = Product.order(id: :desc).search(params[:page_no], params[:per_page], params[:key_word])
+            products = Product.order(id: :desc).search(params[:page_no], params[:per_page],
+              params[:key_word], params[:category], params[:sort_name])
 
             @data = {
               message: "Index products successfully",
               products: products,
-              total_products: Product.search(nil, nil, params[:key_word]).count
+              total_products: Product.search(nil, nil, params[:key_word], params[:category], params[:sort_name]).count
             }
           else
             error!({ success: false, message: "Admin not found" }, 404)
@@ -146,6 +150,7 @@ class API::V1::Admins::ProductAPI < Grape::API
       params do
         optional :title, type: String, desc: "Title of product"
         optional :description, type: String, desc: "Description of product"
+        optional :category, type: String, desc: "Category of product"
         optional :images, type: String, desc: "Image urls of product, include image urls separated by commas"
         optional :supplier_id, type: Integer, desc: "Id of supplier"
         optional :variants_attributes, type: Array, desc: "Array variants of product" do
@@ -156,7 +161,7 @@ class API::V1::Admins::ProductAPI < Grape::API
           optional :selling_price, type: Integer, desc: "Selling price of variant"
           at_least_one_of :image_url, :inventory, :original_price, :selling_price
         end
-        at_least_one_of :title, :description, :images, :supplier_id, :variants_attributes
+        at_least_one_of :title, :description, :images, :supplier_id, :variants_attributes, :category
       end
       patch "/:id", jbuilder: "admins/products/update" do
         email = request.headers["Authorization"]
