@@ -4,12 +4,16 @@ class Order < ApplicationRecord
   has_many :variants, through: :order_variants
   validates :status, presence: true, inclusion: { in: Settings.order.status }
   validates :total_price, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  scope :filter_by_customer, -> (customer) { where(customer_id: customer, status: "active") }
+  scope :filter_by_customer, -> (customer) { where(customer_id: customer) }
   scope :active, -> { where(status: "active") }
 
   class << self
-    def search customer, page_no=nil, per_page=nil, daterange=nil
-      result = Order.filter_by_customer(customer)
+    def search customer=nil, page_no=nil, per_page=nil, daterange=nil
+      if customer.present?
+        result = Order.filter_by_customer(customer)
+      else
+        result = Order.all
+      end
       if per_page.present? && page_no.present?
         result = result.limit(per_page).offset((page_no - 1) * per_page)
       end

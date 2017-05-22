@@ -31,7 +31,6 @@ class API::V1::OrderAPI < Grape::API
       else
         error!({ success: false, message: "Authenticate fail" }, 401)
       end
-
     end
 
     desc "Create order"

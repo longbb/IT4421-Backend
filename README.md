@@ -325,6 +325,330 @@ Code                 | Description
   }
 }
 ```
+
+## ProductAPI for Customer
+
+### 1. Index product
+
+**ENDPOINT**: *"/api/v1/products"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number product per page            | No
+key_word             | String         | Key word want to search            | No
+category             | String         | Category want to search            | No
+sort_name            | String         | Sort type want to search           | No
+
+***Note:**
+- page_no, per_page provide all or none of parameters
+- sort_name must be "asc" or "desc"*
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index product successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Index products successfully",
+  "total_products": 10,
+  "products":
+  [
+    {
+      "product":
+      {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "category": "new_category",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
+      }
+    },
+    {
+      "product":
+      {
+        "id": 2,
+        "title": "Old product",
+        "description": "old product",
+        "category": "new_category",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "options": "color",
+        "status": "active",
+        "min_price": 20000,
+        "max_price": 20000,
+        "total_inventory": 100
+      }
+    },
+  ]
+}
+
+```
+
+### 2. Show product
+
+**ENDPOINT**: *"/api/v1/products/:id"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+id                   | Integer        | Id of product want to show         | Yes
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show product successfully
+404                  | Product not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Show product successfully",
+  "product":
+  {
+    "id": 10,
+    "title": "new_product",
+    "description": "new product",
+    "category": "new_category",
+    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+    "supplier_id": 1,
+    "options": "color",
+    "status": "active",
+    "created_at": "2017-04-23T15:56:49.785Z",
+    "updated_at": "2017-04-23T15:56:49.785Z"
+  },
+  "total_inventory": 100,
+  "variants":
+  [
+    {
+      "id": 10,
+      "properties":
+      [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product_id": "10",
+      "original_price": 10000,
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }
+  ]
+}
+```
+
+## OrderAPI for customer
+
+### 1. Create order
+
+**NOTE**: *Customer can login or not, unless login, customer must fill customer info*
+
+**ENDPOINT**: *"/api/v1/orders"*
+
+**Method**: POST
+
+--- Case 1: User not login but create order ---
+
+**Parameters**
+
+Params                   | Type          | Description              | Requires?
+:-----------------------:| :------------ | :-----------------------:|:---------------:
+customer                 | Hash          | Hash of customer info    | No
+customer.fullname        | String        | Name of user             | Yes
+customer.email           | String        | Email of user            | Yes
+customer.address         | String        | Address of user          | Yes
+customer.phone_number    | String        | Phone number of user     | Yes
+total_price              | Integer       | Total price of order     | Yes
+variants                 | Array of Hash | Array variants info      | Yes
+variants.variant_id      | Integer       | ID of variant            | Yes
+variants.quantity        | Integer       | Quantity of variant      | Yes
+variants.unit_price      | Integer       | Unit price of a variant  | Yes
+
+--- Case 2: User login and create order ---
+
+**Parameters**
+
+Params                   | Type          | Description              | Requires?
+:-----------------------:| :------------ | :-----------------------:|:---------------:
+total_price              | Integer       | Total price of order     | Yes
+variants                 | Array of Hash | Array variants info      | Yes
+variants.variant_id      | Integer       | ID of variant            | Yes
+variants.quantity        | Integer       | Quantity of variant      | Yes
+variants.unit_price      | Integer       | Unit price of a variant  | Yes
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of user
+Tokenkey             | String        | Token key
+
+--------------------------------------------------------------------------------------
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------:
+201                  | Create order successfully
+400                  | customer.errors.messages
+400                  | order.errors.messages
+401                  | Authenticate fail
+401                  | Not enough quantity
+404                  | Variant not found
+404                  | User not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Create order successfully",
+  "order": {
+    "id": 10,
+    "customer_id": 8,
+    "total_price": 100000000,
+    "status": "active",
+    "created_at": "2017-05-16T07:59:43.509Z",
+    "updated_at": "2017-05-16T07:59:43.509Z"},
+    "order_variants": [{
+      "order_variant": {
+        "quantity": 1,
+        "status": "active"
+      },
+      "variant": {
+        "properties": [{
+          "name": "color",
+          "value": "blue"
+        }],
+        "id": 2,
+        "product": {
+          "id": 1,
+          "title": "new_product",
+          "description": "new product",
+          "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+          "supplier_id": 1,
+          "slug": "new_product",
+          "options": "color",
+          "status": "active",
+          "created_at": "2017-05-20T18:02:29.751Z",
+          "updated_at": "2017-05-20T18:02:29.751Z"
+        },
+        "selling_price": 5000,
+        "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "inventory": 1000,
+        "status": "active"
+      }
+    }]
+  }
+}
+```
+
+### 2. Index orders
+
+**ENDPOINT**: *"/api/v1/orders"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number order per page              | No
+daterange            | String         | Daterange to search                | No
+
+***Note:** page_no, per_page provide all or none of parameters; format of daterange: "%m/%d/%y-%m/%d/%y", eg: "05/01/2017-05/18/2017"*
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of user
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index orders successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+401                  | Authenticate fail
+404                  | User not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+
+```json
+{
+  "success": true,
+  "message": "Index orders successfully",
+  "total_orders": 1,
+  "orders":
+  [{
+    "id": 1,
+    "total_price": 20000,
+    "status": "active",
+    "variants":
+    [{
+      "quantity": 3,
+      "variant_id": 1,
+      "properties":
+      [{
+        "name":"color",
+        "value":"red"
+      }],
+      "product": {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "slug": "new_product",
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-05-20T18:02:29.751Z",
+        "updated_at": "2017-05-20T18:02:29.751Z"
+      },
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 100,
+      "status": "active"
+    }]
+  }]
+}
+```
+
 # API ADMIN
 
 ## AdminSession
@@ -1000,6 +1324,7 @@ Code                 | Description
   "message": "Destroy product successfully"
 }
 ```
+
 ## VariantAPI
 
 ### 1. Create Variant of a product
@@ -1090,254 +1415,11 @@ Code                 | Description
 }
 ```
 
-## ProductAPI for Customer
+## OrderAPI
 
-### 1. Index product
+### 1. Index order
 
-**ENDPOINT**: *"/api/v1/products"*
-
-**Method**: GET
-
-**Parameters**
-
-Params               | Type           | Description                        | Requires?
-:-------------------:| :-------------:| :---------------------------------:|:---------------:
-page_no              | Integer        | Page no                            | No
-per_page             | Integer        | Number product per page            | No
-key_word             | String         | Key word want to search            | No
-category             | String         | Category want to search            | No
-sort_name            | String         | Sort type want to search           | No
-
-***Note:**
-- page_no, per_page provide all or none of parameters
-- sort_name must be "asc" or "desc"*
-
-**Response**:
-
-Code                 | Description
-:-------------------:| :---------------------------------------------------:
-200                  | Index product successfully
-400                  | page_no, per_page provide all or none of parameters
-400                  | Per page and page no must be greater than 0
-500                  | Something error (system error)
-
-**Structure of JSON**
-
-```json
-{
-  "success": true,
-  "message": "Index products successfully",
-  "total_products": 10,
-  "products":
-  [
-    {
-      "product":
-      {
-        "id": 1,
-        "title": "new_product",
-        "description": "new product",
-        "category": "new_category",
-        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-        "supplier_id": 1,
-        "options": "color",
-        "status": "active",
-        "min_price": 20000,
-        "max_price": 20000,
-        "total_inventory": 100
-      }
-    },
-    {
-      "product":
-      {
-        "id": 2,
-        "title": "Old product",
-        "description": "old product",
-        "category": "new_category",
-        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-        "supplier_id": 1,
-        "options": "color",
-        "status": "active",
-        "min_price": 20000,
-        "max_price": 20000,
-        "total_inventory": 100
-      }
-    },
-  ]
-}
-
-```
-
-### 2. Show product
-
-**ENDPOINT**: *"/api/v1/products/:id"*
-
-**Method**: GET
-
-**Parameters**
-
-Params               | Type           | Description                        | Requires?
-:-------------------:| :-------------:| :---------------------------------:|:---------------:
-id                   | Integer        | Id of product want to show         | Yes
-
-**Response**:
-
-Code                 | Description
-:-------------------:| :---------------------------------------------------:
-200                  | Show product successfully
-404                  | Product not found
-500                  | Something error (system error)
-
-**Structure of JSON**
-
-```json
-{
-  "success": true,
-  "message": "Show product successfully",
-  "product":
-  {
-    "id": 10,
-    "title": "new_product",
-    "description": "new product",
-    "category": "new_category",
-    "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-    "supplier_id": 1,
-    "options": "color",
-    "status": "active",
-    "created_at": "2017-04-23T15:56:49.785Z",
-    "updated_at": "2017-04-23T15:56:49.785Z"
-  },
-  "total_inventory": 100,
-  "variants":
-  [
-    {
-      "id": 10,
-      "properties":
-      [
-        {
-          "name": "color",
-          "value": "red"
-        }
-      ],
-      "product_id": "10",
-      "original_price": 10000,
-      "selling_price": 20000,
-      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-      "inventory": 100,
-      "status": "active"
-    }
-  ]
-}
-```
-## OrderAPI for customer
-
-### 1. Create order
-
-**NOTE**: *Customer can login or not, unless login, customer must fill customer info*
-
-**ENDPOINT**: *"/api/v1/orders"*
-
-**Method**: POST
-
---- Case 1: User not login but create order ---
-
-**Parameters**
-
-Params                   | Type          | Description              | Requires?
-:-----------------------:| :------------ | :-----------------------:|:---------------:
-customer                 | Hash          | Hash of customer info    | No
-customer.fullname        | String        | Name of user             | Yes
-customer.email           | String        | Email of user            | Yes
-customer.address         | String        | Address of user          | Yes
-customer.phone_number    | String        | Phone number of user     | Yes
-total_price              | Integer       | Total price of order     | Yes
-variants                 | Array of Hash | Array variants info      | Yes
-variants.variant_id      | Integer       | ID of variant            | Yes
-variants.quantity        | Integer       | Quantity of variant      | Yes
-variants.unit_price      | Integer       | Unit price of a variant  | Yes
-
---- Case 2: User login and create order ---
-
-**Parameters**
-
-Params                   | Type          | Description              | Requires?
-:-----------------------:| :------------ | :-----------------------:|:---------------:
-total_price              | Integer       | Total price of order     | Yes
-variants                 | Array of Hash | Array variants info      | Yes
-variants.variant_id      | Integer       | ID of variant            | Yes
-variants.quantity        | Integer       | Quantity of variant      | Yes
-variants.unit_price      | Integer       | Unit price of a variant  | Yes
-
-**Headers**
-
-Headers              | Type          | Description
-:-------------------:| :------------:| :-----------------------:
-Authorization        | String        | Email of user
-Tokenkey             | String        | Token key
-
---------------------------------------------------------------------------------------
-
-**Response**:
-
-Code                 | Description
-:-------------------:| :---------------------------:
-201                  | Create order successfully
-400                  | customer.errors.messages
-400                  | order.errors.messages
-401                  | Authenticate fail
-401                  | Not enough quantity
-404                  | Variant not found
-404                  | User not found
-500                  | Something error (system error)
-
-**Structure of JSON**
-
-```json
-{
-  "success": true,
-  "message": "Create order successfully",
-  "order": {
-    "id": 10,
-    "customer_id": 8,
-    "total_price": 100000000,
-    "status": "active",
-    "created_at": "2017-05-16T07:59:43.509Z",
-    "updated_at": "2017-05-16T07:59:43.509Z"},
-    "order_variants": [{
-      "order_variant": {
-        "quantity": 1,
-        "status": "active"
-      },
-      "variant": {
-        "properties": [{
-          "name": "color",
-          "value": "blue"
-        }],
-        "id": 2,
-        "product": {
-          "id": 1,
-          "title": "new_product",
-          "description": "new product",
-          "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-          "supplier_id": 1,
-          "slug": "new_product",
-          "options": "color",
-          "status": "active",
-          "created_at": "2017-05-20T18:02:29.751Z",
-          "updated_at": "2017-05-20T18:02:29.751Z"
-        },
-        "selling_price": 5000,
-        "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
-        "inventory": 1000,
-        "status": "active"
-      }
-    }]
-  }
-}
-```
-
-### 2. Index orders
-
-**ENDPOINT**: *"/api/v1/orders"*
+**ENDPOINT**: *"/api/v1/admins/orders"*
 
 **Method**: GET
 
@@ -1348,14 +1430,17 @@ Params               | Type           | Description                        | Req
 page_no              | Integer        | Page no                            | No
 per_page             | Integer        | Number order per page              | No
 daterange            | String         | Daterange to search                | No
+customer_id          | Integer        | Customer id to search              | No
 
-***Note:** page_no, per_page provide all or none of parameters; format of daterange: "%m/%d/%y-%m/%d/%y", eg: "05/01/2017-05/18/2017"*
+**Note:**
+- *page_no, per_page provide all or none of parameters*;
+- *format of daterange: "%m/%d/%y-%m/%d/%y", eg: "05/01/2017-05/18/2017"*
 
 **Headers**
 
 Headers              | Type          | Description
 :-------------------:| :------------:| :-----------------------:
-Authorization        | String        | Email of user
+Authorization        | String        | Email of Admin
 Tokenkey             | String        | Token key
 
 **Response**:
@@ -1366,11 +1451,11 @@ Code                 | Description
 400                  | page_no, per_page provide all or none of parameters
 400                  | Per page and page no must be greater than 0
 401                  | Authenticate fail
-404                  | User not found
+404                  | Admin not found
+404                  | Customer not found
 500                  | Something error (system error)
 
 **Structure of JSON**
-
 
 ```json
 {
@@ -1411,3 +1496,253 @@ Code                 | Description
   }]
 }
 ```
+
+### 2. Show order
+
+**ENDPOINT**: *"/api/v1/admins/orders/:id"*
+
+**Method**: GET
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of Admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show order successfully
+401                  | Authenticate fail
+404                  | Admin not found
+404                  | Order not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Show order successfully",
+  "order": {
+    "id": 8,
+    "customer_id": 1,
+    "total_price": 100000000,
+    "status": "active",
+    "created_at": "2017-05-20T19:35:44.517Z",
+    "updated_at": "2017-05-20T19:35:44.517Z"
+  },
+  "order_variants": [
+    {
+      "quantity": 1,
+      "variant_id": 1,
+      "properties": [
+        {
+          "name": "color",
+          "value": "red"
+        }
+      ],
+      "product": {
+        "id": 1,
+        "title": "new_product",
+        "description": "new product",
+        "images": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+        "supplier_id": 1,
+        "slug": "new_product",
+        "options": "color",
+        "status": "active",
+        "created_at": "2017-05-20T18:02:29.751Z",
+        "updated_at": "2017-05-20T18:02:29.751Z",
+        "category":null
+      },
+      "selling_price": 20000,
+      "image_url": "http://static.boredpanda.com/blog/wp-content/uploads/2015/01/creative-t-shirts-31__605.jpg",
+      "inventory": 98,
+      "status": "active"
+    }
+  ],
+  "customer": {
+    "id": 1,
+    "fullname": "longbb",
+    "email": "longbb@gmail.com",
+    "address": "HN",
+    "phone_number": "1234567890",
+    "status": "Blocked",
+    "created_at": "2017-05-20T18:43:31.480Z",
+    "updated_at": "2017-05-22T19:11:38.184Z"
+  }
+}
+```
+
+### 3. Update status order
+
+**ENDPOINT**: *"/api/v1/admins/orders/:id"*
+
+**Method**: PATCH
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+status               | String         | Status want update                 | Yes
+
+***NOTE**: status must be "active", "canceled" or "done"*
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of Admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Update status order successfully
+401                  | Authenticate fail
+404                  | Admin not found
+404                  | Order not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Update status order successfully"
+}
+```
+
+## CustomerAPI
+
+### 1. Index customers
+
+**ENDPOINT**: *"/api/v1/admins/customers"*
+
+**Method**: GET
+
+**Parameters**
+
+Params               | Type           | Description                        | Requires?
+:-------------------:| :-------------:| :---------------------------------:|:---------------:
+page_no              | Integer        | Page no                            | No
+per_page             | Integer        | Number order per page              | No
+name                 | String         | Name of customer to search         | No
+
+**Note:** page_no, per_page provide all or none of parameters*
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of Admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Index customers successfully
+400                  | page_no, per_page provide all or none of parameters
+400                  | Per page and page no must be greater than 0
+401                  | Authenticate fail
+404                  | Admin not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Index customers successfully",
+  "total_customers": 1,
+  "customers": [
+    {
+      "id": 1,
+      "fullname": "longbb",
+      "email": "longbb@gmail.com",
+      "address": "HN",
+      "phone_number": "1234567890",
+      "status": "Active",
+      "created_at": "2017-05-20T18:43:31.480Z",
+      "updated_at": "2017-05-22T19:35:15.571Z"
+    }
+  ]
+}
+```
+
+### 2. Show customer
+
+**ENDPOINT**: *"/api/v1/admins/customers/:id"*
+
+**Method**: GET
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of Admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show customer successfully
+401                  | Authenticate fail
+404                  | Admin not found
+404                  | Customer not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Show customer successfully",
+  "customer": {
+    "id": 1,
+    "fullname": "longbb",
+    "email": "longbb@gmail.com",
+    "address": "HN",
+    "phone_number": "1234567890",
+    "status": "Active",
+    "created_at": "2017-05-20T18:43:31.480Z",
+    "updated_at": "2017-05-22T19:35:15.571Z"
+  }
+}
+
+### 3. Block customer
+
+**ENDPOINT**: *"/api/v1/admins/customers/:id"*
+
+**Method**: DELETE
+
+**Headers**
+
+Headers              | Type          | Description
+:-------------------:| :------------:| :-----------------------:
+Authorization        | String        | Email of Admin
+Tokenkey             | String        | Token key
+
+**Response**:
+
+Code                 | Description
+:-------------------:| :---------------------------------------------------:
+200                  | Show customer successfully
+401                  | Customer not active
+401                  | Authenticate fail
+404                  | Admin not found
+404                  | Customer not found
+500                  | Something error (system error)
+
+**Structure of JSON**
+
+```json
+{
+  "success": true,
+  "message": "Block customer successfully"
+}
