@@ -1714,6 +1714,7 @@ Code                 | Description
     "updated_at": "2017-05-22T19:35:15.571Z"
   }
 }
+```
 
 ### 3. Block customer
 
@@ -1746,3 +1747,4 @@ Code                 | Description
   "success": true,
   "message": "Block customer successfully"
 }
+```
