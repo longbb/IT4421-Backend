@@ -13,4 +13,5 @@ class API::V1 < Grape::API
   mount Admins::VariantAPI
   mount Admins::OrderAPI
   mount Admins::CustomerAPI
+  mount Admins::DashboardAPI
 end

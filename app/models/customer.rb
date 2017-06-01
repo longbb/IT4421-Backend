@@ -12,6 +12,7 @@ class Customer < ApplicationRecord
     format: { with: VALID_PHONE_NUMBER_REGEX }, length: { in: 10..11 }
   validates :address, presence: true
   validates :status, presence: true, inclusion: { in: Settings.user.status }
+  scope :active, -> { where(status: "Active") }
 
   def is_active?
     self.status == "Active"

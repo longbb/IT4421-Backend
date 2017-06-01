@@ -52,5 +52,18 @@ class Order < ApplicationRecord
       end
       return result
     end
+
+    def statistic_revenues start_date, end_date
+      statistic_revenues = {
+        data: Array.new,
+        date: Array.new
+      }
+      (start_date..end_date).each do |date|
+        revenues = self.where(created_at: date.beginning_of_day..date.end_of_day).sum(:total_price)
+        statistic_revenues[:data].push revenues
+        statistic_revenues[:date].push date.to_s
+      end
+      statistic_revenues
+    end
   end
 end
